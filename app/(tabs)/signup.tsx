@@ -1,7 +1,30 @@
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"
+
+import { SignUpFormValidation } from "@/utils/validation";
 
 export default function SignUp() {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<z.infer<typeof SignUpFormValidation>>({
+    resolver: zodResolver(SignUpFormValidation),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const onSubmit = (data: z.infer<typeof SignUpFormValidation>) => {
+    console.log(data);
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-gray-100 pb-14">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -25,46 +48,112 @@ export default function SignUp() {
               {/* Full Name */}
               <View className="mb-4 w-full">
                 <Text className="text-gray-700 mb-2">Full Name</Text>
-                <TextInput
-                  className="p-3 border border-gray-300 rounded bg-white"
-                  placeholder="Enter your full name"
+                <Controller
+                  control={control}
+                  name="name"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      className="p-3 border border-gray-300 rounded bg-white"
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      placeholder="Enter your full name"
+                    />
+                  )}
                 />
+                {errors.name && (
+                  <Text className="text-red-500 mt-1">
+                    {errors.name.message}
+                  </Text>
+                )}
               </View>
 
               {/* Email */}
               <View className="mb-4 w-full">
                 <Text className="text-gray-700 mb-2">Email</Text>
-                <TextInput
-                  className="p-3 border border-gray-300 rounded bg-white"
-                  placeholder="Enter your email"
-                  keyboardType="email-address"
+                <Controller
+                  control={control}
+                  name="email"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      className="p-3 border border-gray-300 rounded bg-white"
+                      placeholder="Enter your email"
+                      keyboardType="email-address"
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                    />
+                  )}
                 />
+                {errors.email && (
+                  <Text className="text-red-500 mt-1">
+                    {errors.email.message}
+                  </Text>
+                )}
               </View>
 
               {/* Password */}
               <View className="mb-4 w-full">
                 <Text className="text-gray-700 mb-2">Password</Text>
-                <TextInput
-                  className="p-3 border border-gray-300 rounded bg-white"
-                  placeholder="Enter your password"
-                  secureTextEntry
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      className="p-3 border border-gray-300 rounded bg-white"
+                      placeholder="Enter your password"
+                      secureTextEntry
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      onEndEditing={(event) => {
+                        if (event.nativeEvent.text.length === 0) {
+                          onChange("");
+                        }
+                      }}
+                    />
+                  )}
                 />
+                {errors.password && (
+                  <Text className="text-red-500 mt-1">
+                    {errors.password.message}
+                  </Text>
+                )}
               </View>
 
               {/* Confirm Password */}
               <View className="mb-6 w-full">
                 <Text className="text-gray-700 mb-2">Confirm Password</Text>
-                <TextInput
-                  className="p-3 border border-gray-300 rounded bg-white"
-                  placeholder="Confirm your password"
-                  secureTextEntry
+                <Controller
+                  control={control}
+                  name="confirmPassword"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      className="p-3 border border-gray-300 rounded bg-white"
+                      placeholder="Confirm your password"
+                      secureTextEntry
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      onEndEditing={(event) => {
+                        if (event.nativeEvent.text.length === 0) {
+                          onChange("");
+                        }
+                      }}
+                    />
+                  )}
                 />
+                {errors.confirmPassword && (
+                  <Text className="text-red-500 mt-1">
+                    {errors.confirmPassword.message}
+                  </Text>
+                )}
               </View>
 
               {/* Submit Button */}
               <TouchableOpacity
                 className="bg-blue-500 px-12 py-4 rounded-2xl"
-                // onPress={handleSubmit(onSubmit)}
+                onPress={handleSubmit(onSubmit)}
               >
                 <Text className="text-center text-white font-bold">
                   Sign Up
