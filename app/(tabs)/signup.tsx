@@ -5,6 +5,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { SignUpFormValidation } from "@/utils/validation";
+import { signUp } from "@/tools/api";
+import Toast from "react-native-toast-message";
+import { saveToSecureStore } from "@/utils/expo-secure-store";
 
 export default function SignUp() {
   const {
@@ -21,8 +24,20 @@ export default function SignUp() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof SignUpFormValidation>) => {
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof SignUpFormValidation>) => {
+    const res = await signUp(data);
+    if(res.error) {
+      const { data } = res.error;
+      Toast.show({
+        type: "error",
+        text1:
+          typeof data.message === "string"
+            ? data.message
+            : data.message.email || data.message.name || data.message.password,
+      });
+    } else if(res.success) {
+      await saveToSecureStore("user_me", res.success.res.data.jwt.token);
+    }
   };
 
   return (
