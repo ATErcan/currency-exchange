@@ -28,8 +28,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         const { status, data } = error;
         if (status === 401) {
           await deleteValueFor("user_me");
-          // TODO: change to login after created
-          router.navigate("/routing/(guest)/signup");
+          router.navigate("/login");
         }
         // TODO handle other errors
         setUser(null);
@@ -48,7 +47,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     await deleteValueFor("user_me");
     setUser(null);
     // TODO: change to login after created
-    router.navigate("/routing/(guest)/signup");
+    router.navigate("/login");
   }
   
   useEffect(() => {
