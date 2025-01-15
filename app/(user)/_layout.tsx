@@ -1,4 +1,4 @@
-import { Tabs } from 'expo-router';
+import { Redirect, Stack, Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 
@@ -7,10 +7,21 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useAuth } from '@/components/context/auth/AuthContext';
 
 export default function UserLayout() {
   const colorScheme = useColorScheme();
-  console.log("user")
+  const { user, isLoading } = useAuth();
+  // TODO: prevent swipe from left on dashboard
+  console.log(user);
+
+  if (isLoading) {
+    return null;
+  }
+  
+  if(!user) {
+    <Redirect href="/login" />
+  }
   return (
     <Tabs
       screenOptions={{
