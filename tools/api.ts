@@ -6,7 +6,7 @@ import {
   CURRENCY_EXCHANGE_API_TIMEOUT,
   endpoints,
 } from "@/constants/api";
-import { Error, ISignUpErrorResponse, ISignUpResponse, User } from "@/lib/types/responses/user.type";
+import { Error, ISignUpErrorResponse, IAuthResponse, User } from "@/lib/types/responses/user.type";
 import { getValueFor } from "@/utils/expo-secure-store";
 
 const API = axios.create({
@@ -65,10 +65,21 @@ export const apiRequest = async <TResponse, TError>(
 
 export const signUp = async ({ name, email, password }: { name: string, email: string, password: string }) => {
   const url = endpoints.signUp;
-  const { success, error } = await apiRequest<ISignUpResponse, ISignUpErrorResponse>(
+  const { success, error } = await apiRequest<IAuthResponse, ISignUpErrorResponse>(
     url,
     "POST",
     { name, email, password }
+  );
+
+  return { success, error };
+}
+
+export const login = async ({ email, password }: { email: string, password: string }) => {
+  const url = endpoints.login;
+  const { success, error } = await apiRequest<IAuthResponse, Error>(
+    url,
+    "POST",
+    { email, password }
   );
 
   return { success, error };

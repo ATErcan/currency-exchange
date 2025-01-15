@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { router } from "expo-router";
+import { router, useGlobalSearchParams, useNavigation } from "expo-router";
 
 import { User } from "@/lib/types/responses/user.type";
 import { deleteValueFor } from "@/utils/expo-secure-store";
@@ -16,6 +16,9 @@ const AuthContext = createContext<AuthContext | undefined>(undefined);
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { user: userParam, extra } = useGlobalSearchParams();
+  const navigation = useNavigation();
 
   async function checkUser() {
     setIsLoading(true);
@@ -50,7 +53,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   
   useEffect(() => {
     checkUser();
-  }, [])
+  }, [userParam, extra, navigation]);
 
   return <AuthContext.Provider value={{ user, isLoading, logout }}>{children}</AuthContext.Provider>
 }
