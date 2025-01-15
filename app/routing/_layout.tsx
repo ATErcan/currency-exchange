@@ -9,9 +9,13 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RoutingLayout() {
   const { user, isLoading } = useAuth();
-
+  console.log(user, "routing")
   if (isLoading) {
-    return null;
+    return (
+      <Stack>
+        <Stack.Screen name='loading' options={{ headerShown: false }} />
+      </Stack>
+    )
   }
 
   return (

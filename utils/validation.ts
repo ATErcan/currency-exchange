@@ -21,4 +21,12 @@ export const SignUpFormValidation = z
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
-  });;
+  });
+
+export const LoginFormValidation = z.object({
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Invalid email address" }),
+  password: z.string().min(1, { message: "Password is required" }),
+});

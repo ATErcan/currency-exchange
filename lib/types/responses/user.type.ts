@@ -18,13 +18,14 @@ export interface ISignUpErrorResponse {
   } | string;
 }
 
-export interface ISignUpResponse {
+type AuthUser = {
+  id: string;
+  name: string;
+  email: string;
+}
+export interface IAuthResponse {
   jwt: {
     token: string;
   },
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  }
+  user: AuthUser
 }

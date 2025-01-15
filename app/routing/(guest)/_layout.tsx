@@ -10,7 +10,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function GuestLayout() {
   const colorScheme = useColorScheme();
-  
+  console.log("guest")
   return (
     <Tabs
       screenOptions={{
