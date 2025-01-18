@@ -6,7 +6,6 @@ import Toast from 'react-native-toast-message';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedScrollView } from '@/components/ThemedScrollView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import CurrencyCard from '@/components/currency/CurrencyCard';
 import Transactions from '@/components/currency/Transactions';
 import { useBottomTabOverflow } from '@/components/ui/TabBarBackground';
@@ -21,6 +20,7 @@ export default function HomeScreen() {
     amount: 0
   });
   const [currencies, setCurrencies] = useState<Currency[]>([]);
+  // TODO: calculate or remove totalBalance
   const [totalBalance, setTotalBalance] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -83,34 +83,50 @@ export default function HomeScreen() {
         <ThemedText type="title">100 PLN</ThemedText>
       </ThemedView>
       <View className="flex-row gap-2 my-3">
-        <ThemedView className="gap-2 mb-1 rounded-2xl self-start px-1" lightColor="#e5e7eb" darkColor='#262626'>
+        <ThemedView className="gap-2 mb-1 rounded-2xl self-start px-1" lightColor="#e5e7eb" darkColor="#262626">
           {/* TODO: Change to add-funds when created */}
           <Link href="/explore">
             <View className="flex-row items-center py-1.5 px-2">
-              <ThemedIconSymbol size={16} name="plus" lightColor='#262626' darkColor='#e5e7eb' />
-              <ThemedText className="ml-2 font-medium" lightColor='#262626' darkColor='#e5e7eb'>Add Funds</ThemedText>
+              <ThemedIconSymbol size={16} name="plus" lightColor="#262626" darkColor="#e5e7eb" />
+              <ThemedText className="ml-2 font-medium" lightColor="#262626" darkColor="#e5e7eb">
+                Add Funds
+              </ThemedText>
             </View>
           </Link>
         </ThemedView>
-        <ThemedView className="gap-2 mb-1 rounded-2xl self-start px-2" lightColor="#e5e7eb" darkColor='#262626'>
+        <ThemedView className="gap-2 mb-1 rounded-2xl self-start px-2" lightColor="#e5e7eb" darkColor="#262626">
           {/* TODO: Change to exchange when created */}
           <Link href="/explore">
             <View className="flex-row items-center py-1.5 px-2">
-              <ThemedIconSymbol size={16} name="arrow.left.and.right" lightColor='#262626' darkColor='#e5e7eb' />
-              <ThemedText className="ml-2 font-medium" lightColor='#262626' darkColor='#e5e7eb'>Exchange</ThemedText>
+              <ThemedIconSymbol size={16} name="arrow.left.and.right" lightColor="#262626" darkColor="#e5e7eb" />
+              <ThemedText className="ml-2 font-medium" lightColor="#262626" darkColor="#e5e7eb">
+                Exchange
+              </ThemedText>
             </View>
           </Link>
         </ThemedView>
       </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} className='mb-6'>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        className="mb-6"
+      >
         <View className="flex-row gap-4">
-          <CurrencyCard code={baseCurrency.code} amount={baseCurrency.amount} />
-          {currencies.map(currency => (
-            <CurrencyCard key={currency._id} code={currency.code} amount={currency.amount} />
+          <CurrencyCard code={baseCurrency.code} amount={baseCurrency.amount} loading={loading} />
+          {currencies.map((currency) => (
+            <CurrencyCard
+              key={currency._id}
+              code={currency.code}
+              amount={currency.amount}
+              loading={loading}
+            />
           ))}
+          {/* TODO: Add a card to add new currency */}
         </View>
       </ScrollView>
-      <Transactions />
+      
+      <Transactions baseCurrency={baseCurrency.code} />
     </ThemedScrollView>
   );
 }

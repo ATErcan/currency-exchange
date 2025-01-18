@@ -11,15 +11,26 @@ export type Currency = {
   updatedAt: string;
 };
 
-export type Transaction = {
+export type Fund = {
   _v: number;
   _id: string;
   userId: string;
-  type: "fund" | "exchange";
-  amount?: number;
-  exchangeRate?: number;
-  from?: SingleCurrency;
-  to?: SingleCurrency;
+  type: "fund";
+  amount: number;
   createdAt: string;
   updatedAt: string;
 };
+
+export type Exchange = {
+  _v: number;
+  _id: string;
+  userId: string;
+  type: "exchange";
+  exchangeRate: number;
+  from: SingleCurrency;
+  to: SingleCurrency;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type Transaction = Fund | Exchange;

@@ -8,7 +8,7 @@ import { ThemedText } from "../ThemedText";
 import { ICurrencyCardProps } from "@/lib/types/props.types";
 import { formatAmount, roundToPrecision } from "@/utils/formatDecimalSeperator";
 
-export default function CurrencyCard({ code, amount }: ICurrencyCardProps) {
+export default function CurrencyCard({ code, amount, loading }: ICurrencyCardProps) {
   const country = getAllISOByCurrencyOrSymbol('currency', code);
   const formattedAmount = formatAmount(roundToPrecision(amount));
   // TODO: fix multiple countries using the same currency
@@ -18,13 +18,13 @@ export default function CurrencyCard({ code, amount }: ICurrencyCardProps) {
       <Link href="/explore" className="h-full w-full p-5">
         <View className="h-full w-full flex flex-col justify-between">
           <View className="flex-row items-center gap-4">
-            <View className="w-14 h-14 rounded-full items-center justify-center overflow-hidden">
-              <CountryFlag isoCode={country[0]} size={36} style={{ width: "100%", height: "100%" }} />
-            </View>
-            <ThemedText type="defaultSemiBold" lightColor="#111827">{code}</ThemedText>
+            <ThemedView className="w-14 h-14 rounded-full items-center justify-center overflow-hidden" lightColor="#111827">
+              {!loading && <CountryFlag isoCode={country[0]} size={36} style={{ width: "100%", height: "100%" }} />}
+            </ThemedView>
+            <ThemedText type="defaultSemiBold" lightColor="#111827">{loading ? "***" : code}</ThemedText>
           </View>
           <View>
-            <ThemedText type="title" lightColor="#000">{formattedAmount}</ThemedText>
+            <ThemedText type="title" lightColor="#000">{loading ? "***" : formattedAmount}</ThemedText>
           </View>
         </View>
       </Link>
