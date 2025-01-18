@@ -43,7 +43,7 @@ export default function Login() {
       });
     } else if (res.success) {
       await saveToSecureStore("user_me", res.success.res.data.jwt.token);
-      router.navigate("/(user)/dashboard");
+      router.navigate("/(user)/home");
     } else {
       Toast.show({
         type: "error",
