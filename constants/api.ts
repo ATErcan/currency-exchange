@@ -4,5 +4,6 @@ export const CURRENCY_EXCHANGE_API_TIMEOUT = 5000;
 export const endpoints = {
   signUp: "/auth/signup",
   login: "auth/login",
-  getUserInfo: "/users/me"
+  getUserInfo: "/users/me",
+  getFinancials: "financial"
 }
