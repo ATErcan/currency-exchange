@@ -17,8 +17,9 @@ export function formatAmount(subtotal: number) {
   const wholeFormatted = formatDecimalSeparator(whole);
   if (decimalAmount.includes(".")) {
     return `${wholeFormatted},${fraction}`;
+  } else {
+    return `${wholeFormatted},00`
   }
-  return wholeFormatted;
 }
 
 export function roundToPrecision(number: number, precision: number = 2) {

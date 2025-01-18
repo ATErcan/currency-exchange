@@ -10,7 +10,7 @@ import { formatAmount, roundToPrecision } from "@/utils/formatDecimalSeperator";
 
 export default function CurrencyCard({ code, amount }: ICurrencyCardProps) {
   const country = getAllISOByCurrencyOrSymbol('currency', code);
-  const formattedAmount = formatAmount(roundToPrecision(amount)) === "0" ? "0,00" : formatAmount(roundToPrecision(amount))
+  const formattedAmount = formatAmount(roundToPrecision(amount));
   // TODO: fix multiple countries using the same currency
   return (
     <ThemedView className="rounded-xl w-52 h-52 flex flex-col justify-between" lightColor="#e5e7eb" darkColor="#262626">

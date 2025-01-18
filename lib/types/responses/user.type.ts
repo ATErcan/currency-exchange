@@ -31,22 +31,3 @@ export interface IAuthResponse {
   },
   user: AuthUser
 }
-
-export type Currency = {
-  _id: string;
-  code: string;
-  amount: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface IFinancialsResponse {
-  data: {
-    __v: number;
-    _id: string;
-    userId: string;
-    balance: number;
-    currencies: Currency[];
-    baseCurrency: string;
-  };
-}

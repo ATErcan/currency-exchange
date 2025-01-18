@@ -3,8 +3,43 @@ import { Link } from "expo-router";
 
 import { ThemedText } from "../ThemedText";
 import TransactionItem from "./TransactionItem";
+import { useEffect, useState } from "react";
+import { Transaction } from "@/lib/types/currencies.type";
+import { getAllTransactions } from "@/tools/api";
+import Toast from "react-native-toast-message";
 
 export default function Transactions() {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    try {
+      fetchAllTransactions();
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Something went wrong, try again later.",
+      });
+      setTransactions([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [])
+
+  async function fetchAllTransactions() {
+    const { success, error } = await getAllTransactions();
+    if(error) {
+      Toast.show({
+        type: "error",
+        text1: error.data.message
+      });
+      setTransactions([]);
+    } else if(success) {
+      const data = success.res.data.data;
+      setTransactions(data);
+    }
+  }
+
   return (
     <View className="gap-4">
       <View className="flex-row justify-between">
@@ -15,8 +50,10 @@ export default function Transactions() {
         </ThemedText>
       </View>
       <View className="gap-4">
-        {Array.from({ length: 3 }).map(_ => (
-          <TransactionItem />
+        {loading ? (
+          <ThemedText type="title">Loading...</ThemedText>
+        ) : transactions.map(transaction => (
+          <TransactionItem key={transaction._id} />
         ))}
       </View>
     </View>

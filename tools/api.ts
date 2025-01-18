@@ -1,13 +1,13 @@
 import axios, { AxiosResponse } from "axios";
-import { useNavigation } from "expo-router";
 
 import {
   CURRENCY_EXCHANGE_API,
   CURRENCY_EXCHANGE_API_TIMEOUT,
   endpoints,
 } from "@/constants/api";
-import { Error, ISignUpErrorResponse, IAuthResponse, User, IFinancialsResponse } from "@/lib/types/responses/user.type";
+import { Error, ISignUpErrorResponse, IAuthResponse, User } from "@/lib/types/responses/user.type";
 import { getValueFor } from "@/utils/expo-secure-store";
+import { IFinancialsResponse, ITransactionsResponse } from "@/lib/types/responses/financial.type";
 
 const API = axios.create({
   baseURL: CURRENCY_EXCHANGE_API,
@@ -86,15 +86,22 @@ export const login = async ({ email, password }: { email: string, password: stri
 }
 
 export const getUserInfo = async () => {
-  const url = endpoints.getUserInfo;
+  const url = endpoints.userInfo;
   const { success, error } = await apiRequest<User, Error>(url, "GET");
 
   return { success, error }
 }
 
 export const getFinancials = async () => {
-  const url = endpoints.getFinancials;
+  const url = endpoints.financials;
   const { success, error } = await apiRequest<IFinancialsResponse, Error>(url, "GET");
+
+  return { success, error };
+}
+
+export const getAllTransactions = async () => {
+  const url = endpoints.allTransactions;
+  const { success, error } = await apiRequest<ITransactionsResponse, Error>(url, "GET");
 
   return { success, error };
 }

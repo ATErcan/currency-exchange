@@ -11,14 +11,14 @@ import CurrencyCard from '@/components/currency/CurrencyCard';
 import Transactions from '@/components/currency/Transactions';
 import { useBottomTabOverflow } from '@/components/ui/TabBarBackground';
 import { getFinancials } from '@/tools/api';
-import { Currency } from '@/lib/types/responses/user.type';
-import { BaseCurrency } from '@/lib/types/currencies.type';
+import { Currency } from '@/lib/types/currencies.type';
+import { SingleCurrency } from '@/lib/types/currencies.type';
 import { ThemedIconSymbol } from '@/components/ThemedIconSymbol';
 
 export default function HomeScreen() {
-  const [baseCurrency, setBaseCurrency] = useState<BaseCurrency>({
+  const [baseCurrency, setBaseCurrency] = useState<SingleCurrency>({
     code: "PLN",
-    balance: 0
+    amount: 0
   });
   const [currencies, setCurrencies] = useState<Currency[]>([]);
   const [totalBalance, setTotalBalance] = useState<number>(0);
@@ -52,7 +52,7 @@ export default function HomeScreen() {
       const { balance, baseCurrency, currencies } = success?.res.data.data;
       setBaseCurrency({
         code: baseCurrency,
-        balance: balance
+        amount: balance
       })
       setCurrencies(currencies);
     }
@@ -61,7 +61,7 @@ export default function HomeScreen() {
   const resetValuesOnError = useCallback(() => {
     setBaseCurrency({
       code: "PLN",
-      balance: 0,
+      amount: 0,
     });
     setTotalBalance(0);
     setCurrencies((prevCurrencies) =>
@@ -104,7 +104,7 @@ export default function HomeScreen() {
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} className='mb-6'>
         <View className="flex-row gap-4">
-          <CurrencyCard code={baseCurrency.code} amount={baseCurrency.balance} />
+          <CurrencyCard code={baseCurrency.code} amount={baseCurrency.amount} />
           {currencies.map(currency => (
             <CurrencyCard key={currency._id} code={currency.code} amount={currency.amount} />
           ))}
