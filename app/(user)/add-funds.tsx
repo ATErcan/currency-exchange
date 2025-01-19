@@ -44,7 +44,7 @@ export default function AddFundsScreen() {
         className="flex-1"
         keyboardVerticalOffset={10}
       >
-        <ThemedScrollView className="p-4">
+        <ThemedScrollView className="px-4 py-6">
           <ThemedText type="title">Add Funds</ThemedText>
           <CreditCardView
             focusedField={focusedField}

@@ -1,20 +1,43 @@
 import { useState } from "react";
-import { TextInput, View } from "react-native";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Link, router, useLocalSearchParams } from "expo-router";
 
 import { ThemedScrollView } from "@/components/ThemedScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import CircleFlag from "@/components/currency/CircleFlag";
+import { Controller, useForm } from "react-hook-form";
+import { FundAmountValidation } from "@/utils/validation";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { formatNumber } from "@/utils/formatDecimalSeperator";
 
 export default function FundAmountScreen() {
-  const [amount, setAmount] = useState<string>("");
-
   const { baseCurrency } = useLocalSearchParams();
 
-  const handleChange = (num: string) => {
-    setAmount(num);
-  }
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<z.infer<typeof FundAmountValidation>>({
+    resolver: zodResolver(FundAmountValidation),
+    defaultValues: {
+      amount: "",
+    },
+  });
+
+  const handleChange = (value: string) => {
+    const formattedValue = formatNumber(value);
+    setValue("amount", formattedValue, { shouldValidate: true });
+  };
+
+  const onSubmit = (data: z.infer<typeof FundAmountValidation>) => {
+    router.push({
+      pathname: "/(user)/add-funds",
+      params: { amount: data.amount }
+    })
+  };
 
   return (
     <ThemedScrollView
@@ -29,11 +52,18 @@ export default function FundAmountScreen() {
           lightColor="#e5e7eb"
           darkColor="#262626"
         >
-          <TextInput
-            keyboardType="numeric"
-            value={amount}
-            onChangeText={handleChange}
-            className="flex-1 h-full p-2 text-3xl text-gray-300"
+          <Controller
+            control={control}
+            name="amount"
+            render={({ field: { value } }) => (
+              <TextInput
+                keyboardType="numeric"
+                value={value}
+                onChangeText={(text) => handleChange(text)}
+                className="flex-1 h-full p-2 text-3xl text-gray-300"
+                placeholder="0,00"
+              />
+            )}
           />
           <View className="flex-row items-center gap-1">
             <CircleFlag
@@ -44,15 +74,18 @@ export default function FundAmountScreen() {
             <ThemedText type="defaultSemiBold">{baseCurrency}</ThemedText>
           </View>
         </ThemedView>
+        {errors.amount && (
+          <Text className="text-red-500">{errors.amount.message}</Text>
+        )}
       </View>
-      <Link
-        href="/(user)/add-funds"
+      <TouchableOpacity
         className="bg-blue-500 px-12 py-4 rounded-2xl mb-8"
+        onPress={handleSubmit(onSubmit)}
       >
         <ThemedText className="text-center text-white font-bold">
           Continue
         </ThemedText>
-      </Link>
+      </TouchableOpacity>
     </ThemedScrollView>
   );
 }
