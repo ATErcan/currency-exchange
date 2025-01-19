@@ -17,8 +17,8 @@ export default function CurrencyCard({ code, amount, loading }: ICurrencyCardPro
       {/* TODO: Change to currency page when created */}
       <Link
         href={{
-          pathname: `/currency/${code.toLowerCase()}`,
-          params: { currency: code, amount, country: country[0] }
+          pathname: `/currency/[code]`,
+          params: { code, currency: code, amount: formattedAmount, country: country[0] }
         }}
         className="h-full w-full p-5"
       >
