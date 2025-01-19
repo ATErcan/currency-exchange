@@ -15,7 +15,13 @@ export default function CurrencyCard({ code, amount, loading }: ICurrencyCardPro
   return (
     <ThemedView className="rounded-xl w-52 h-52 flex flex-col justify-between" lightColor="#e5e7eb" darkColor="#262626">
       {/* TODO: Change to currency page when created */}
-      <Link href={`/currency/${code.toLowerCase()}`} className="h-full w-full p-5">
+      <Link
+        href={{
+          pathname: `/currency/${code.toLowerCase()}`,
+          params: { currency: code, amount, country: country[0] }
+        }}
+        className="h-full w-full p-5"
+      >
         <View className="h-full w-full flex flex-col justify-between">
           <View className="flex-row items-center gap-4">
             <CircleFlag country={country[0]} loading={loading} />

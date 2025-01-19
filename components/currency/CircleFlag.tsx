@@ -11,7 +11,7 @@ export default function CircleFlag({
 }: ICircleFlagProps) {
   return (
     <ThemedView
-      className={`${width} ${height} rounded-full items-center justify-center overflow-hidden`}
+      className={`${width} ${height} rounded-full items-center justify-center overflow-hidden border border-gray-200`}
       lightColor="#111827"
     >
       {!loading && (
