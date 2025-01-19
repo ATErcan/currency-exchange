@@ -13,16 +13,16 @@ import Avatar from '@/components/ui/Avatar';
 export default function UserLayout() {
   const colorScheme = useColorScheme();
   const { user, isLoading } = useAuth();
-  console.log(user);
+  console.log("user", user);
 
   if (isLoading) {
     return null;
   }
   
   if(!user) {
-    <Redirect href="/login" />
+    return <Redirect href="/login" />;
   }
-  console.log(user?.data.name)
+  
   return (
     <Tabs
       screenOptions={{

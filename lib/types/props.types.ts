@@ -13,3 +13,10 @@ export interface ITransactionsProps {
 export interface ITransactionItemProps extends ITransactionsProps {
   transaction: Transaction;
 }
+
+export interface ICircleFlagProps {
+  country: string;
+  width?: string;
+  height?: string;
+  loading?: boolean;
+}
