@@ -25,6 +25,14 @@ export default function UserLayout() {
           headerTitle: route.params?.code + " Balance" || "",
         })}
       />
+      <Stack.Screen
+        name="fund-amount"
+        options={{ headerBackTitle: "Transactions", headerTitle: "Fund Amount" }}
+      />
+      <Stack.Screen
+        name="add-funds"
+        options={{ headerBackTitle: "Fund Amount", headerTitle: "Add Funds" }}
+      />
       <Stack.Screen name="loading" />
     </Stack>
   );

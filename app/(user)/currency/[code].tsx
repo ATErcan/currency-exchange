@@ -18,7 +18,7 @@ export default function CurrencyScreen() {
       <View className="flex-1 justify-center items-center gap-10">
         <View className="gap-2 items-center">
           <View className="flex-row gap-4 items-center">
-            <CircleFlag country={country as string} />
+            <CircleFlag code={typeof code === "string" ? code : code[0]} />
             <ThemedText style={{ fontSize: 16 }}>{currency} Balance</ThemedText>
           </View>
           <ThemedText style={{ fontSize: 48, lineHeight: 48, fontWeight: 500 }}>

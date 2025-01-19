@@ -85,7 +85,10 @@ export default function HomeScreen() {
       <View className="flex-row gap-2 my-3">
         <ThemedView className="gap-2 mb-1 rounded-2xl self-start px-1" lightColor="#e5e7eb" darkColor="#262626">
           {/* TODO: Change to add-funds when created */}
-          <Link href="/explore">
+          <Link href={{
+            pathname: "/(user)/fund-amount",
+            params: { baseCurrency: baseCurrency.code }
+          }}>
             <View className="flex-row items-center py-1.5 px-2">
               <ThemedIconSymbol size={16} name="plus" lightColor="#262626" darkColor="#e5e7eb" />
               <ThemedText className="ml-2 font-medium" lightColor="#262626" darkColor="#e5e7eb">

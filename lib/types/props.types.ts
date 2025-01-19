@@ -15,7 +15,7 @@ export interface ITransactionItemProps extends ITransactionsProps {
 }
 
 export interface ICircleFlagProps {
-  country: string;
+  code: string;
   width?: string;
   height?: string;
   loading?: boolean;

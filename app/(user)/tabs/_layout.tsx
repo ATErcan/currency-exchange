@@ -58,6 +58,15 @@ export default function TabsLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="transactions"
+        options={{
+          title: "Transactions",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="dollarsign.circle" color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
