@@ -10,9 +10,15 @@ import 'react-native-reanimated';
 import "../styles/global.css"
 import { useColorScheme } from '@/hooks/useColorScheme';
 import AuthProvider from '@/components/context/auth/AuthContext';
+import { Platform, UIManager } from 'react-native';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+if (Platform.OS === "android") {
+  UIManager.setLayoutAnimationEnabledExperimental &&
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();

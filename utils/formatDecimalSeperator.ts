@@ -26,3 +26,20 @@ export function roundToPrecision(number: number, precision: number = 2) {
   const factor = 10 ** precision;
   return Math.trunc(number * factor) / factor;
 }
+
+export const formatNumber = (value: string) => {
+  const cleanValue = value.replace(/[^\d,]/g, ""); // Remove invalid characters
+  const [integerPart, decimalPart] = cleanValue.split(",");
+
+  // Ensure the integer part is truncated to 9 digits
+  const truncatedInteger = integerPart?.slice(0, 9);
+
+  // Format the truncated integer part with dots for thousands
+  const formattedInteger = truncatedInteger
+    ?.replace(/\./g, "") // Remove existing dots
+    .replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add dots for thousands
+
+  return decimalPart !== undefined
+    ? `${formattedInteger},${decimalPart.slice(0, 2)}`
+    : formattedInteger;
+};

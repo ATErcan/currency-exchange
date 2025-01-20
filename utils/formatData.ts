@@ -7,3 +7,8 @@ export function formatDate(dateStr: string) {
   }).format(date);
   return formattedDate;
 }
+
+export function formatTransactionId(id: string) {
+  const ID_LENGTH = 8;
+  return `#${id.slice(0, ID_LENGTH)}`;
+}

@@ -30,3 +30,17 @@ export const LoginFormValidation = z.object({
     .email({ message: "Invalid email address" }),
   password: z.string().min(1, { message: "Password is required" }),
 });
+
+export const FundAmountValidation = z.object({
+  amount: z
+    .string()
+    .min(1, { message: "Please enter an amount" })
+    .refine(
+      (val) =>
+        /^\d{1,3}(\.\d{3})*(,\d{1,2})?$/.test(val), // Match thousands separated by dots and optional decimals with a comma
+      { message: "Invalid amount format" }
+    )
+    .refine((val) => parseFloat(val.replace(/\./g, "").replace(",", ".")) >= 1, {
+      message: "Amount cannot be less than 1",
+    }),
+});

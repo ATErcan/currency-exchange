@@ -24,7 +24,7 @@ export default function CurrencyCard({ code, amount, loading }: ICurrencyCardPro
       >
         <View className="h-full w-full flex flex-col justify-between">
           <View className="flex-row items-center gap-4">
-            <CircleFlag country={country[0]} loading={loading} />
+            <CircleFlag code={code} loading={loading} />
             <ThemedText type="defaultSemiBold" lightColor="#111827">{loading ? "***" : code}</ThemedText>
           </View>
           <View>
