@@ -11,10 +11,7 @@ export default function CurrencyScreen() {
   const { code, currency, amount, country } = useLocalSearchParams();
 
   return (
-    <ThemedScrollView
-      className="p-4"
-      contentContainerStyle={{ flexGrow: 1 }}
-    >
+    <ThemedScrollView className="p-4" contentContainerStyle={{ flexGrow: 1 }}>
       <View className="flex-1 justify-center items-center gap-10">
         <View className="gap-2 items-center">
           <View className="flex-row gap-4 items-center">
@@ -28,10 +25,19 @@ export default function CurrencyScreen() {
 
         <View className="flex-row gap-8">
           <View className="items-center">
-            <Link href="/(user)/tabs/explore">
+            <Link
+              href={{
+                pathname:
+                  code === "PLN"
+                    ? "/(user)/fund-amount"
+                    : "/(user)/tabs/explore",
+                params: { baseCurrency: code === "PLN" ? "PLN" : "" },
+              }}
+            >
               <ThemedView
                 className="w-14 h-14 rounded-full items-center justify-center overflow-hidden"
                 lightColor="#e5e7eb"
+                darkColor="#262626"
               >
                 <ThemedIconSymbol
                   size={24}
@@ -49,6 +55,7 @@ export default function CurrencyScreen() {
               <ThemedView
                 className="w-14 h-14 rounded-full items-center justify-center overflow-hidden"
                 lightColor="#e5e7eb"
+                darkColor="#262626"
               >
                 <ThemedIconSymbol
                   size={24}

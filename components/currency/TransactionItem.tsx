@@ -5,15 +5,16 @@ import { IconSymbol } from "../ui/IconSymbol";
 import { ThemedText } from "../ThemedText";
 import { ITransactionItemProps } from "@/lib/types/props.types";
 import { formatAmount, roundToPrecision } from "@/utils/formatDecimalSeperator";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/utils/formatData";
+import { ThemedIconSymbol } from "../ThemedIconSymbol";
 
 export default function TransactionItem({ transaction, baseCurrency }: ITransactionItemProps) {
 
   if(transaction.type === "fund") {
     return (
       <View className="flex-row items-center gap-4">
-        <ThemedView lightColor="#e5e7eb" className="w-16 h-16 rounded-full items-center justify-center">
-          <IconSymbol size={24} name="arrow.down" color="black" />
+        <ThemedView lightColor="#e5e7eb" darkColor="#262626" className="w-16 h-16 rounded-full items-center justify-center">
+          <ThemedIconSymbol size={24} name="arrow.down" lightColor="#000" darkColor="#e5e7eb" />
         </ThemedView>
         <View className="flex-1 flex-col gap-0">
           <View className="flex-row justify-between m-0">
@@ -33,8 +34,8 @@ export default function TransactionItem({ transaction, baseCurrency }: ITransact
   if(transaction.type === "exchange") {
     return (
       <View className="flex-row items-center gap-4">
-        <ThemedView lightColor="#e5e7eb" className="w-16 h-16 rounded-full items-center justify-center">
-          <IconSymbol size={24} name="arrow.left.and.right" color="black" />
+        <ThemedView lightColor="#e5e7eb" darkColor="#262626" className="w-16 h-16 rounded-full items-center justify-center">
+          <ThemedIconSymbol size={24} name="arrow.left.and.right" lightColor="#000" darkColor="#e5e7eb" />
         </ThemedView>
         <View className="flex-1 flex-col gap-0">
           <View className="flex-row justify-between m-0">

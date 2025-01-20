@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { formatNumber } from "@/utils/formatDecimalSeperator";
 
 export default function FundAmountScreen() {
-  const { baseCurrency } = useLocalSearchParams();
+  const { baseCurrency }: { baseCurrency: string; } = useLocalSearchParams();
 
   const {
     control,
@@ -68,11 +68,11 @@ export default function FundAmountScreen() {
           />
           <View className="flex-row items-center gap-1">
             <CircleFlag
-              code={typeof baseCurrency === "string" ? baseCurrency : baseCurrency[0]}
+              code={baseCurrency ?? "PLN"}
               width="w-10"
               height="h-10"
             />
-            <ThemedText type="defaultSemiBold">{baseCurrency}</ThemedText>
+            <ThemedText type="defaultSemiBold">{baseCurrency || "PLN"}</ThemedText>
           </View>
         </ThemedView>
         {errors.amount && (

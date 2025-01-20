@@ -19,5 +19,6 @@ export interface IAddFundsResponse {
   data: {
     transaction: Transaction;
     balance: number;
+    baseCurrency: string;
   }
 }

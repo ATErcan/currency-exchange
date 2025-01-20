@@ -18,7 +18,7 @@ export default function TransactionsScreen() {
       <View className={`flex-1 justify-center items-center`}>
         <View className="gap-4">
           <ThemedView className="gap-2 mb-1 rounded-2xl self-start px-1" lightColor="#e5e7eb" darkColor="#262626">
-            <Link href="/add-funds">
+            <Link href="/fund-amount">
               <View className="flex-row items-center py-3 px-5">
                 <ThemedIconSymbol size={20} name="plus" lightColor="#262626" darkColor="#e5e7eb" />
                 <ThemedText className="ml-2" type="subtitle" style={{ fontWeight: 500 }} lightColor="#262626" darkColor="#e5e7eb">
