@@ -4,17 +4,24 @@ import {
   CURRENCY_EXCHANGE_API,
   CURRENCY_EXCHANGE_API_TIMEOUT,
   endpoints,
+  NBP_WEB_API,
+  NBP_WEB_API_TIMEOUT,
 } from "@/constants/api";
 import { Error, ISignUpErrorResponse, IAuthResponse, User } from "@/lib/types/responses/user.type";
 import { getValueFor } from "@/utils/expo-secure-store";
 import { IAddFundsResponse, IFinancialsResponse, ITransactionsResponse } from "@/lib/types/responses/financial.type";
 
-const API = axios.create({
+const CurrencyAPI = axios.create({
   baseURL: CURRENCY_EXCHANGE_API,
   timeout: CURRENCY_EXCHANGE_API_TIMEOUT,
 });
 
-API.interceptors.request.use(
+const NBPWebAPI = axios.create({
+  baseURL: NBP_WEB_API,
+  timeout: NBP_WEB_API_TIMEOUT
+});
+
+CurrencyAPI.interceptors.request.use(
   async (config) => {
     const token = await getValueFor("user_me");
     if(token) {
@@ -25,7 +32,7 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 )
 
-API.interceptors.response.use(
+CurrencyAPI.interceptors.response.use(
   (response) => response,
   async (error) => {
     return Promise.reject(error);
@@ -42,7 +49,7 @@ export const apiRequest = async <TResponse, TError>(
   error: { data: TError; status: number } | null;
 }> => {
   try {
-    const res: AxiosResponse<TResponse> = await API({
+    const res: AxiosResponse<TResponse> = await CurrencyAPI({
       url,
       method,
       data,
