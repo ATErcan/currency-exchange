@@ -19,7 +19,7 @@ export default function TransactionItem({ transaction, baseCurrency }: ITransact
           <View className="flex-row justify-between m-0">
             <ThemedText style={{ fontSize: 18, fontWeight: 600 }}>To {baseCurrency} balance</ThemedText>
             <ThemedText style={{ fontSize: 18, fontWeight: 600 }}>
-              {`${formatAmount(roundToPrecision(transaction.amount))} ${baseCurrency}`}
+              {`+ ${formatAmount(roundToPrecision(transaction.amount))} ${baseCurrency}`}
             </ThemedText>
           </View>
           <View className="flex-row justify-between m-0">

@@ -36,7 +36,8 @@ export const FundAmountValidation = z.object({
     .string()
     .min(1, { message: "Please enter an amount" })
     .refine(
-      (val) => /^\d{1,9}(,\d{1,2})?$/.test(val), // Match up to 9 digits before comma and max 2 digits after comma
+      (val) =>
+        /^\d{1,3}(\.\d{3})*(,\d{1,2})?$/.test(val), // Match thousands separated by dots and optional decimals with a comma
       { message: "Invalid amount format" }
     )
     .refine((val) => parseFloat(val.replace(/\./g, "").replace(",", ".")) >= 1, {

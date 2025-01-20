@@ -14,3 +14,10 @@ export interface IFinancialsResponse {
 export interface ITransactionsResponse {
   data: Transaction[];
 }
+
+export interface IAddFundsResponse {
+  data: {
+    transaction: Transaction;
+    balance: number;
+  }
+}

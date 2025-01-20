@@ -33,6 +33,7 @@ export default function UserLayout() {
         name="add-funds"
         options={{ headerBackTitle: "Fund Amount", headerTitle: "Add Funds" }}
       />
+      <Stack.Screen name="transaction-success" options={{ headerShown: false }} />
       <Stack.Screen name="loading" />
     </Stack>
   );

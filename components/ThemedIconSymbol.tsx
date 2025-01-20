@@ -20,7 +20,8 @@ export function ThemedIconSymbol({
   color,
   style,
   lightColor,
-  darkColor
+  darkColor,
+  weight
 }: ThemedIconProps) {
   const themeColor = useThemeColor(
     { light: lightColor, dark: darkColor },
@@ -29,5 +30,5 @@ export function ThemedIconSymbol({
 
   const finalColor = color || themeColor;
 
-  return <IconSymbol name={name} size={size} color={finalColor} style={style} />;
+  return <IconSymbol name={name} size={size} color={finalColor} style={style} weight={weight} />;
 }

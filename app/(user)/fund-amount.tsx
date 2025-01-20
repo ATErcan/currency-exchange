@@ -52,6 +52,7 @@ export default function FundAmountScreen() {
           lightColor="#e5e7eb"
           darkColor="#262626"
         >
+          {/* TODO: Create a ThemedInput component */}
           <Controller
             control={control}
             name="amount"
@@ -82,7 +83,7 @@ export default function FundAmountScreen() {
         className="bg-blue-500 px-12 py-4 rounded-2xl mb-8"
         onPress={handleSubmit(onSubmit)}
       >
-        <ThemedText className="text-center text-white font-bold">
+        <ThemedText className="text-center font-bold" lightColor="#e5e7eb">
           Continue
         </ThemedText>
       </TouchableOpacity>

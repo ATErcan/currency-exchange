@@ -3,8 +3,9 @@ export const CURRENCY_EXCHANGE_API_TIMEOUT = 5000;
 
 export const endpoints = {
   signUp: "/auth/signup",
-  login: "auth/login",
+  login: "/auth/login",
   userInfo: "/users/me",
-  allTransactions: "users/me/transactions",
-  financials: "financial"
+  allTransactions: "/users/me/transactions",
+  financials: "/financial",
+  addFunds: "/financial/fund"
 }

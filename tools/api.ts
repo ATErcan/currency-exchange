@@ -7,7 +7,7 @@ import {
 } from "@/constants/api";
 import { Error, ISignUpErrorResponse, IAuthResponse, User } from "@/lib/types/responses/user.type";
 import { getValueFor } from "@/utils/expo-secure-store";
-import { IFinancialsResponse, ITransactionsResponse } from "@/lib/types/responses/financial.type";
+import { IAddFundsResponse, IFinancialsResponse, ITransactionsResponse } from "@/lib/types/responses/financial.type";
 
 const API = axios.create({
   baseURL: CURRENCY_EXCHANGE_API,
@@ -34,7 +34,7 @@ API.interceptors.response.use(
 
 export const apiRequest = async <TResponse, TError>(
   url: string,
-  method: "GET" | "POST" | "PUT" | "DELETE",
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
   data?: Record<string, unknown>,
   headers?: Record<string, string>
 ): Promise<{
@@ -102,6 +102,17 @@ export const getFinancials = async () => {
 export const getAllTransactions = async () => {
   const url = endpoints.allTransactions;
   const { success, error } = await apiRequest<ITransactionsResponse, Error>(url, "GET");
+
+  return { success, error };
+}
+
+export const addFunds = async ( amount: number ) => {
+  const url = endpoints.addFunds;
+  const { success, error } = await apiRequest<IAddFundsResponse, Error>(
+    url,
+    "PATCH",
+    { amount }
+  );
 
   return { success, error };
 }
