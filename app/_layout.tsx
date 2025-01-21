@@ -25,7 +25,7 @@ export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
-  console.log("root")
+  
   useEffect(() => {
     if (fontsLoaded) {
       SplashScreen.hideAsync();

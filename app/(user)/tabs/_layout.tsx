@@ -13,7 +13,6 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 export default function TabsLayout() {
   const colorScheme = useColorScheme();
   const { user, isLoading } = useAuth();
-  console.log("user", user);
 
   if (isLoading) {
     return null;

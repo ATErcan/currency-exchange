@@ -10,6 +10,8 @@ import {
 import { Error, ISignUpErrorResponse, IAuthResponse, User } from "@/lib/types/responses/user.type";
 import { getValueFor } from "@/utils/expo-secure-store";
 import { IAddFundsResponse, IFinancialsResponse, ITransactionsResponse } from "@/lib/types/responses/financial.type";
+import { IRatesTableResponse } from "@/lib/types/responses/nbp.type";
+import { RatesTable } from "@/lib/types/rates.type";
 
 const CurrencyAPI = axios.create({
   baseURL: CURRENCY_EXCHANGE_API,
@@ -122,4 +124,25 @@ export const addFunds = async ( amount: number ) => {
   );
 
   return { success, error };
+}
+
+export const getAllCurrenciesByTable = async (table = "a"): Promise<RatesTable> => {
+  try {
+    const { data }: { data: IRatesTableResponse } = await NBPWebAPI.get(`/tables/${table}/?format=json`);
+    return data[0];
+  } catch (error) {
+    throw new Error(`Failed to fetch currency rates`);
+  }
+};
+
+export const getAllCurrencies = async () => {
+  try {
+    const [tableA, tableB] = await Promise.allSettled([getAllCurrenciesByTable("a"), getAllCurrenciesByTable("b")]);
+    if(tableA.status === "rejected" && tableB.status === "rejected") {
+      throw new Error("NBP API tables are unavailable. Please try again later.");
+    }
+    return [tableA, tableB]
+  } catch (error) {
+    throw new Error(`Failed to fetch currency rates`);
+  }
 }
