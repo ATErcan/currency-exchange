@@ -1,5 +1,3 @@
-import { FLOATING_POINT } from "@/constants/utilsConstants";
-
 export function formatDecimalSeparator(whole: string) {
   let result = "";
   let digits = 0;
@@ -29,7 +27,7 @@ export function roundToPrecision(number: number, precision: number = 2) {
   return Math.trunc(number * factor) / factor;
 }
 
-export const formatNumber = (value: string, floatingPoint: number = FLOATING_POINT) => {
+export const formatNumber = (value: string) => {
   const cleanValue = value.replace(/[^\d,]/g, ""); // Remove invalid characters
   const [integerPart, decimalPart] = cleanValue.split(",");
 

@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { ThemedScrollView } from "@/components/ThemedScrollView";
 import { ThemedText } from "@/components/ThemedText";
@@ -12,16 +14,10 @@ import { ThemedIconSymbol } from "@/components/ThemedIconSymbol";
 import CurrencyDropdown from "@/components/currency/CurrencyDropdown";
 import { UserFinancial } from "@/lib/types/currencies.type";
 import { formatAmount, formatNumber, roundToPrecision } from "@/utils/formatDecimalSeperator";
-import { calculateRate } from "@/utils/currencyFunctions";
+import { calculateExchangeResult, calculateRate } from "@/utils/currencyFunctions";
 import { BASE_CURRENCY } from "@/constants/utilsConstants";
-
-
-
-const baseToCurrency = {
-  currency: "United States of America",
-  code: "USD",
-  mid: 4.0
-}
+import { TransactionAmountValidation } from "@/utils/validation";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function ExchangeScreen() {
   const [isFetching, setIsFetching] = useState<boolean>(true);
@@ -29,7 +25,8 @@ export default function ExchangeScreen() {
   const [currencies, setCurrencies] = useState<Rate[]>([BASE_CURRENCY]);
   const [userFinancial, setUserFinancial] = useState<UserFinancial>();
   const [fromCurrency, setFromCurrency] = useState<Rate>(BASE_CURRENCY);
-  const [toCurrency, setToCurrency] = useState<Rate>(baseToCurrency);
+  const [toCurrency, setToCurrency] = useState<Rate>(BASE_CURRENCY);
+  const [toCurrencyValue, setToCurrencyValue] = useState<string>("0,00");
 
   async function fetchCurrencies() {
     try {
@@ -85,7 +82,7 @@ export default function ExchangeScreen() {
         text1: "Something went wrong!",
       });
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     const filteredCurrencies = currencies.filter((currency) =>
@@ -93,7 +90,51 @@ export default function ExchangeScreen() {
     );
     setCurrencies(filteredCurrencies);
     setLoading(false);
-  }, [isFetching])
+  }, [isFetching]);
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<z.infer<typeof TransactionAmountValidation>>({
+    resolver: zodResolver(TransactionAmountValidation),
+    defaultValues: {
+      amount: "",
+    },
+  });
+
+  const fromCurrencyValue = watch("amount");
+
+  const exchangeRate = useMemo(
+    () => calculateRate(fromCurrency.mid, toCurrency.mid),
+    [fromCurrency, toCurrency]
+  );
+
+  useEffect(() => {
+    const calculateToValue = () => {
+      if (fromCurrencyValue) {
+        const numericAmount = parseFloat(fromCurrencyValue.replace(/\./g, "").replace(",", "."));
+        const exchangeResult = calculateExchangeResult(numericAmount, exchangeRate);
+        const formattedResult = formatNumber(formatAmount(exchangeResult));
+        setToCurrencyValue(formattedResult);
+      } else {
+        setToCurrencyValue("0,00");
+      }
+    };
+
+    calculateToValue();
+  }, [fromCurrencyValue, exchangeRate]);
+
+  
+
+  const onSubmit = async (data: z.infer<typeof TransactionAmountValidation>) => {
+    // router.push({
+    //   pathname: "/(user)/add-funds",
+    //   params: { amount: data.amount }
+    // })
+  };
 
   const handleSelectFromCurrency = useCallback((index: string) => {
     setFromCurrency(currencies[+index]);
@@ -110,10 +151,26 @@ export default function ExchangeScreen() {
     return selectedCurrency ? formatAmount(roundToPrecision(selectedCurrency.amount)) : "0,00";
   }, [userFinancial, fromCurrency])
 
-  const exchangeRate = useMemo(() =>
-    calculateRate(fromCurrency.mid, toCurrency.mid),
-    [fromCurrency, toCurrency]
-  );
+  const handleFromChange = (value: string) => {
+    const numericAmount = parseFloat(value.replace(/\./g, "").replace(",", "."));
+
+    if (!isNaN(numericAmount)) {
+      const exchangeResult = calculateExchangeResult(numericAmount, exchangeRate);
+      const [integer] = exchangeResult.toString().split(".");
+
+      if (integer.length <= 9) {
+        const formattedValue = formatNumber(value);
+        setValue("amount", formattedValue, { shouldValidate: true });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Exchange result is exceeding the maximum limit!",
+        });
+      }
+    } else {
+      setValue("amount", "", { shouldValidate: true });
+    }
+  };
 
   return (
     <ThemedScrollView
@@ -130,10 +187,18 @@ export default function ExchangeScreen() {
             lightColor="#e5e7eb"
             darkColor="#262626"
           >
-            <TextInput
-              keyboardType="numeric"
-              className="flex-1 h-full p-2 text-3xl text-gray-300"
-              placeholder="0,00"
+            <Controller
+              control={control}
+              name="amount"
+              render={({ field: { value } }) => (
+                <TextInput
+                  keyboardType="numeric"
+                  value={value}
+                  onChangeText={(text) => handleFromChange(text)}
+                  className="flex-1 h-full p-2 text-3xl text-gray-300"
+                  placeholder="0,00"
+                />
+              )}
             />
             {/* // TODO: check out key props warning */}
             <CurrencyDropdown
@@ -143,8 +208,16 @@ export default function ExchangeScreen() {
               code={fromCurrency.code}
             />
           </ThemedView>
-          <ThemedText style={{ fontSize: 14, lineHeight: 20 }} lightColor="#737373" darkColor="#e5e7eb">
-            You have <Text className="font-bold underline ">{fromCurrency.code} {fromCurrencyBalance}</Text> in your balance
+          <ThemedText
+            style={{ fontSize: 14, lineHeight: 20 }}
+            lightColor="#737373"
+            darkColor="#e5e7eb"
+          >
+            You have{" "}
+            <Text className="font-bold underline ">
+              {fromCurrency.code} {fromCurrencyBalance}
+            </Text>{" "}
+            in your balance
           </ThemedText>
         </View>
         <View className="flex-row justify-between gap-2 my-12">
@@ -154,14 +227,27 @@ export default function ExchangeScreen() {
               lightColor="#e5e7eb"
               darkColor="#262626"
             >
-              <ThemedIconSymbol size={12} name="multiply" lightColor="#262626" darkColor="#e5e7eb" />
+              <ThemedIconSymbol
+                size={12}
+                name="multiply"
+                lightColor="#262626"
+                darkColor="#e5e7eb"
+              />
             </ThemedView>
-            <ThemedText lightColor="#262626" darkColor="#e5e7eb">{formatAmount(exchangeRate)}</ThemedText>
+            <ThemedText lightColor="#262626" darkColor="#e5e7eb">
+              {formatAmount(exchangeRate)}
+            </ThemedText>
           </View>
-          <ThemedText lightColor="#262626" darkColor="#e5e7eb">Exchange Rate</ThemedText>
+          <ThemedText lightColor="#262626" darkColor="#e5e7eb">
+            Exchange Rate
+          </ThemedText>
         </View>
         <View>
-          <ThemedText style={{ fontSize: 14, lineHeight: 20 }} lightColor="#737373" darkColor="#e5e7eb">
+          <ThemedText
+            style={{ fontSize: 14, lineHeight: 20 }}
+            lightColor="#737373"
+            darkColor="#e5e7eb"
+          >
             To your {toCurrency.code} balance
           </ThemedText>
           <ThemedView
@@ -171,9 +257,10 @@ export default function ExchangeScreen() {
           >
             <TextInput
               keyboardType="numeric"
+              editable={false}
+              value={toCurrencyValue}
               className="flex-1 h-full p-2 text-3xl text-gray-300"
               placeholder="0,00"
-              editable={false}
             />
             {/* // TODO: check out key props warning */}
             <CurrencyDropdown
