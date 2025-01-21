@@ -16,7 +16,7 @@ import CurrencyDropdown from "@/components/currency/CurrencyDropdown";
 import { UserFinancial } from "@/lib/types/currencies.type";
 import { convertToNumber, formatAmount, formatNumber, roundToPrecision } from "@/utils/formatDecimalSeperator";
 import { calculateExchangeResult, calculateRate } from "@/utils/currencyFunctions";
-import { BASE_CURRENCY } from "@/constants/utilsConstants";
+import { BASE_CURRENCY_RATE } from "@/constants/utilsConstants";
 import { TransactionAmountValidation } from "@/utils/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ExchangeRequest } from "@/lib/types/requests/currency.type";
@@ -25,10 +25,10 @@ export default function ExchangeScreen() {
   const { to, from }: { to: string, from: string } = useLocalSearchParams();
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
-  const [currencies, setCurrencies] = useState<Rate[]>([BASE_CURRENCY]);
+  const [currencies, setCurrencies] = useState<Rate[]>([BASE_CURRENCY_RATE]);
   const [userFinancial, setUserFinancial] = useState<UserFinancial>();
-  const [fromCurrency, setFromCurrency] = useState<Rate>(from ? JSON.parse(from) : BASE_CURRENCY);
-  const [toCurrency, setToCurrency] = useState<Rate>(to ? JSON.parse(to) : BASE_CURRENCY);
+  const [fromCurrency, setFromCurrency] = useState<Rate>(from ? JSON.parse(from) : BASE_CURRENCY_RATE);
+  const [toCurrency, setToCurrency] = useState<Rate>(to ? JSON.parse(to) : BASE_CURRENCY_RATE);
   const [toCurrencyValue, setToCurrencyValue] = useState<string>("0,00");
 
   async function fetchCurrencies() {
