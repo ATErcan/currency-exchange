@@ -1,4 +1,5 @@
 import { Transaction } from "./currencies.type";
+import { Rate } from "./rates.type";
 
 export interface ICurrencyCardProps {
   code: string;
@@ -19,4 +20,11 @@ export interface ICircleFlagProps {
   width?: string;
   height?: string;
   loading?: boolean;
+}
+
+export interface ICurrencyDropdownProps {
+  currencies: Rate[];
+  onSelect: (index: string) => void;
+  loading: boolean;
+  code: string;
 }

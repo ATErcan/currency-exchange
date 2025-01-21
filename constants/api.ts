@@ -10,5 +10,6 @@ export const endpoints = {
   userInfo: "/users/me",
   allTransactions: "/users/me/transactions",
   financials: "/financial",
-  addFunds: "/financial/fund"
-}
+  addFunds: "/financial/fund",
+  exchange: "/financial/exchange",
+};

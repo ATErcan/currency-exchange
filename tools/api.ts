@@ -9,9 +9,10 @@ import {
 } from "@/constants/api";
 import { Error, ISignUpErrorResponse, IAuthResponse, User } from "@/lib/types/responses/user.type";
 import { getValueFor } from "@/utils/expo-secure-store";
-import { IAddFundsResponse, IFinancialsResponse, ITransactionsResponse } from "@/lib/types/responses/financial.type";
+import { IAddFundsResponse, IExchangeResponse, IFinancialsResponse, ITransactionsResponse } from "@/lib/types/responses/financial.type";
 import { IRatesTableResponse } from "@/lib/types/responses/nbp.type";
 import { RatesTable } from "@/lib/types/rates.type";
+import { ExchangeRequest } from "@/lib/types/requests/currency.type";
 
 const CurrencyAPI = axios.create({
   baseURL: CURRENCY_EXCHANGE_API,
@@ -41,10 +42,10 @@ CurrencyAPI.interceptors.response.use(
   }
 )
 
-export const apiRequest = async <TResponse, TError>(
+export const apiRequest = async <TResponse, TError, TData = unknown>(
   url: string,
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
-  data?: Record<string, unknown>,
+  data?: TData,
   headers?: Record<string, string>
 ): Promise<{
   success: { res: AxiosResponse<TResponse> } | null;
@@ -55,7 +56,7 @@ export const apiRequest = async <TResponse, TError>(
       url,
       method,
       data,
-      headers
+      headers,
     });
     return { success: { res }, error: null };
   } catch (error: unknown) {
@@ -126,6 +127,18 @@ export const addFunds = async ( amount: number ) => {
   return { success, error };
 }
 
+export const exchangeCurrencies = async (data: ExchangeRequest) => {
+  const url = endpoints.exchange;
+  const { success, error } = await apiRequest<IExchangeResponse, Error, ExchangeRequest>(
+    url,
+    "POST",
+    data
+  )
+
+  return { success, error };
+}
+
+// NBP WEB API
 export const getAllCurrenciesByTable = async (table = "a"): Promise<RatesTable> => {
   try {
     const { data }: { data: IRatesTableResponse } = await NBPWebAPI.get(`/tables/${table}/?format=json`);
