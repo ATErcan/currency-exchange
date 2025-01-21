@@ -9,9 +9,13 @@ export interface ICurrencyCardProps {
 
 export interface ITransactionsProps {
   baseCurrency: string;
+  isSummary: boolean;
+  page?: number;
+  setMaxPage?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export interface ITransactionItemProps extends ITransactionsProps {
+export interface ITransactionItemProps {
+  baseCurrency: string;
   transaction: Transaction;
 }
 

@@ -109,8 +109,8 @@ export const getFinancials = async () => {
   return { success, error };
 }
 
-export const getAllTransactions = async () => {
-  const url = endpoints.allTransactions;
+export const getAllTransactions = async (page: number = 1) => {
+  const url = `${endpoints.allTransactions}?page=${page}`;
   const { success, error } = await apiRequest<ITransactionsResponse, Error>(url, "GET");
 
   return { success, error };

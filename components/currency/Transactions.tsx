@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { Link } from "expo-router";
 import Toast from "react-native-toast-message";
@@ -9,13 +9,17 @@ import { Transaction } from "@/lib/types/currencies.type";
 import { getAllTransactions } from "@/tools/api";
 import { ITransactionsProps } from "@/lib/types/props.types";
 
-export default function Transactions({ baseCurrency }: ITransactionsProps) {
+function Transactions({ baseCurrency, page, setMaxPage, isSummary }: ITransactionsProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     try {
-      fetchAllTransactions();
+      if(page) {
+        fetchAllTransactions(page);
+      } else {
+        fetchAllTransactions(1);
+      }
     } catch (error) {
       Toast.show({
         type: "error",
@@ -25,10 +29,10 @@ export default function Transactions({ baseCurrency }: ITransactionsProps) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page]);
 
-  async function fetchAllTransactions() {
-    const { success, error } = await getAllTransactions();
+  async function fetchAllTransactions(page: number) {
+    const { success, error } = await getAllTransactions(page);
     if (error) {
       Toast.show({
         type: "error",
@@ -36,24 +40,28 @@ export default function Transactions({ baseCurrency }: ITransactionsProps) {
       });
       setTransactions([]);
     } else if (success) {
-      const data = success.res.data.data;
-      setTransactions(data);
+      const { currentPage, totalPages, data } = success.res.data;
+      if(currentPage === totalPages && setMaxPage) {
+        setMaxPage(true)
+      }
+      setTransactions((prevTransactions) => [...prevTransactions, ...data]);
     }
   }
 
   return (
     <View className="gap-4 mb-2">
       <View className="flex-row justify-between">
-        <ThemedText type="title">Transactions</ThemedText>
-        {/* TODO: change to transactions when created */}
-        <ThemedText lightColor="#111827" className="underline">
-          <Link href="/explore">See All</Link>
-        </ThemedText>
+        <ThemedText type="title" className="mb-2">Transactions</ThemedText>
+        {isSummary && (
+          <ThemedText lightColor="#111827" className="underline">
+            <Link href="/(user)/tabs/history">See All</Link>
+          </ThemedText>
+        )}
       </View>
       <View className="gap-4">
         {/* TODO: create a proper loading UI */}
         {loading ? (
-          <ThemedText type="title">Loading...</ThemedText>
+          <ThemedText type="title" lightColor="#111827" darkColor="#e5e7eb">Loading...</ThemedText>
         ) : (
           transactions.map((transaction) => (
             <TransactionItem key={transaction._id} transaction={transaction} baseCurrency={baseCurrency} />
@@ -63,3 +71,5 @@ export default function Transactions({ baseCurrency }: ITransactionsProps) {
     </View>
   );
 }
+
+export default React.memo(Transactions);

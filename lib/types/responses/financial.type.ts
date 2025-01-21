@@ -5,6 +5,9 @@ export interface IFinancialsResponse {
 }
 
 export interface ITransactionsResponse {
+  currentPage: string;
+  totalPages: string;
+  totalTransactions: string;
   data: Transaction[];
 }
 

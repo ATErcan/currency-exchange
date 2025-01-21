@@ -1,11 +1,10 @@
+import { View } from "react-native";
 import { Link } from "expo-router";
-
 
 import { ThemedView } from "@/components/ThemedView";
 import { useBottomTabOverflow } from "@/components/ui/TabBarBackground";
 import { ThemedIconSymbol } from "@/components/ThemedIconSymbol";
 import { ThemedText } from "@/components/ThemedText";
-import { View } from "react-native";
 import { ThemedScrollView } from "@/components/ThemedScrollView";
 
 export default function TransactionsScreen() {

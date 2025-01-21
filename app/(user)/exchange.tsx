@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
 import Toast from "react-native-toast-message";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -19,7 +20,6 @@ import { BASE_CURRENCY } from "@/constants/utilsConstants";
 import { TransactionAmountValidation } from "@/utils/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ExchangeRequest } from "@/lib/types/requests/currency.type";
-import { router, useLocalSearchParams } from "expo-router";
 
 export default function ExchangeScreen() {
   const { to, from }: { to: string, from: string } = useLocalSearchParams();
