@@ -8,9 +8,9 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemedIconSymbol } from "@/components/ThemedIconSymbol";
 import { findCurrencyRate } from "@/tools/api";
 import { useEffect, useState } from "react";
-import { ICurrencyRateResponse } from "@/lib/types/responses/nbp.type";
 import { Rate } from "@/lib/types/rates.type";
 import Toast from "react-native-toast-message";
+import { BASE_CURRENCY_RATE } from "@/constants/utilsConstants";
 
 export default function CurrencyScreen() {
   const { code, currency, amount }: { code: string, currency: string; amount: string } = useLocalSearchParams();
@@ -38,6 +38,8 @@ export default function CurrencyScreen() {
   useEffect(() => {
     if(code !== "PLN") {
       getCurrencyDetails();
+    } else {
+      setCurrencyInfo(BASE_CURRENCY_RATE)
     }
   }, [])
 

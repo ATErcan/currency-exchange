@@ -1,15 +1,42 @@
-import { Redirect, Stack } from 'expo-router';
-import React from 'react';
+import { Redirect, router, Stack } from 'expo-router';
+import React, { useEffect } from 'react';
 
 import { useAuth } from '@/components/context/auth/AuthContext';
+import { getUserInfo } from '@/tools/api';
+import { deleteValueFor } from '@/utils/expo-secure-store';
 
 export default function UserLayout() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, setIsLoading, setUser } = useAuth();
+
+  const checkUser = async () => {
+    setIsLoading(true);
+    try {
+      const { success, error } = await getUserInfo();
+      if (error) {
+        const { status } = error;
+        if (status === 401) {
+          await deleteValueFor("user_me");
+          router.navigate("/login");
+        }
+        setUser(null);
+      } else if (success) {
+        setUser(success.res.data);
+      }
+    } catch {
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    checkUser();
+  }, [])
 
   if (isLoading) {
     return null;
   }
-  
+
   if(!user) {
     return <Redirect href="/login" />;
   }
