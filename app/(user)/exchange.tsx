@@ -7,17 +7,19 @@ import { z } from "zod";
 import { ThemedScrollView } from "@/components/ThemedScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { getAllCurrencies, getFinancials } from "@/tools/api";
+import { exchangeCurrencies, getAllCurrencies, getFinancials } from "@/tools/api";
 import { Rate } from "@/lib/types/rates.type";
 import { getCountriesByCurrency } from "@/utils/getCountry";
 import { ThemedIconSymbol } from "@/components/ThemedIconSymbol";
 import CurrencyDropdown from "@/components/currency/CurrencyDropdown";
 import { UserFinancial } from "@/lib/types/currencies.type";
-import { formatAmount, formatNumber, roundToPrecision } from "@/utils/formatDecimalSeperator";
+import { convertToNumber, formatAmount, formatNumber, roundToPrecision } from "@/utils/formatDecimalSeperator";
 import { calculateExchangeResult, calculateRate } from "@/utils/currencyFunctions";
 import { BASE_CURRENCY } from "@/constants/utilsConstants";
 import { TransactionAmountValidation } from "@/utils/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ExchangeRequest } from "@/lib/types/requests/currency.type";
+import { router } from "expo-router";
 
 export default function ExchangeScreen() {
   const [isFetching, setIsFetching] = useState<boolean>(true);
@@ -130,10 +132,41 @@ export default function ExchangeScreen() {
   
 
   const onSubmit = async (data: z.infer<typeof TransactionAmountValidation>) => {
-    // router.push({
-    //   pathname: "/(user)/add-funds",
-    //   params: { amount: data.amount }
-    // })
+    const fromCurrencyAmount = convertToNumber(data.amount);
+    const toCurrencyAmount = calculateExchangeResult(fromCurrencyAmount, exchangeRate);
+    const exchangeData: ExchangeRequest = {
+      from: {
+        code: fromCurrency.code,
+        amount: fromCurrencyAmount,
+        mid: fromCurrency.mid,
+      },
+      to: {
+        code: toCurrency.code,
+        amount: toCurrencyAmount,
+        mid: toCurrency.mid,
+      },
+      rate: exchangeRate,
+    };
+    const { success, error } = await exchangeCurrencies(exchangeData);
+    if(error) {
+      Toast.show({
+        type: "error",
+        text1: error.data.message,
+      });
+    } else if(success) {
+      const { financial, transaction } = success.res.data.data;
+      const { balance, baseCurrency } = financial;
+      const data = { balance, baseCurrency, transaction };
+      router.push({
+        pathname: "/transaction-success",
+        params: { data: JSON.stringify(data) }
+      })
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Something went wrong!",
+      });
+    }
   };
 
   const handleSelectFromCurrency = useCallback((index: string) => {
@@ -208,6 +241,9 @@ export default function ExchangeScreen() {
               code={fromCurrency.code}
             />
           </ThemedView>
+          {errors.amount && (
+            <Text className="text-red-500">{errors.amount.message}</Text>
+          )}
           <ThemedText
             style={{ fontSize: 14, lineHeight: 20 }}
             lightColor="#737373"
@@ -272,7 +308,10 @@ export default function ExchangeScreen() {
           </ThemedView>
         </View>
       </View>
-      <TouchableOpacity className="bg-blue-500 px-12 py-4 rounded-2xl mb-8">
+      <TouchableOpacity
+        className="bg-blue-500 px-12 py-4 rounded-2xl mb-8"
+        onPress={handleSubmit(onSubmit)}
+      >
         <ThemedText className="text-center font-bold" lightColor="#e5e7eb">
           Exchange
         </ThemedText>

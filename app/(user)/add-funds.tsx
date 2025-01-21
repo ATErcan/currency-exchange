@@ -44,7 +44,7 @@ export default function AddFundsScreen() {
         });
         if(error.status === 400) return router.navigate("/(user)/fund-amount");
       } else if(success) {
-        const data = success?.res.data;
+        const data = success?.res.data.data;
         router.navigate({
           pathname: "/(user)/transaction-success",
           params: { data: JSON.stringify(data) }

@@ -43,3 +43,7 @@ export const formatNumber = (value: string) => {
     ? `${formattedInteger},${decimalPart.slice(0, 2)}`
     : formattedInteger;
 };
+
+export const convertToNumber = (value: string) => {
+  return parseFloat(value.replace(/\./g, "").replace(",", "."));
+}

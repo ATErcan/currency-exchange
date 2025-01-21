@@ -48,3 +48,9 @@ export interface ExchangeData {
   financial: Omit<UserFinancial, "__v" | "_id" | "userId">;
   transaction: Exchange;
 }
+
+export interface TransactionDetails {
+  transaction: Transaction;
+  balance: number;
+  baseCurrency: string;
+}
