@@ -7,7 +7,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import CircleFlag from "@/components/currency/CircleFlag";
 import { Controller, useForm } from "react-hook-form";
-import { FundAmountValidation } from "@/utils/validation";
+import { TransactionAmountValidation } from "@/utils/validation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formatNumber } from "@/utils/formatDecimalSeperator";
@@ -20,8 +20,8 @@ export default function FundAmountScreen() {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<z.infer<typeof FundAmountValidation>>({
-    resolver: zodResolver(FundAmountValidation),
+  } = useForm<z.infer<typeof TransactionAmountValidation>>({
+    resolver: zodResolver(TransactionAmountValidation),
     defaultValues: {
       amount: "",
     },
@@ -32,7 +32,7 @@ export default function FundAmountScreen() {
     setValue("amount", formattedValue, { shouldValidate: true });
   };
 
-  const onSubmit = (data: z.infer<typeof FundAmountValidation>) => {
+  const onSubmit = (data: z.infer<typeof TransactionAmountValidation>) => {
     router.push({
       pathname: "/(user)/add-funds",
       params: { amount: data.amount }

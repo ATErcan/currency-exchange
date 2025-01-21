@@ -30,6 +30,10 @@ export default function UserLayout() {
         options={{ headerBackTitle: "Transactions", headerTitle: "Fund Amount" }}
       />
       <Stack.Screen
+        name="exchange"
+        options={{ headerBackTitle: "Transactions", headerTitle: "Exchange" }}
+      />
+      <Stack.Screen
         name="add-funds"
         options={{ headerBackTitle: "Fund Amount", headerTitle: "Add Funds" }}
       />

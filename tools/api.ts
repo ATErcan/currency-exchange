@@ -4,17 +4,27 @@ import {
   CURRENCY_EXCHANGE_API,
   CURRENCY_EXCHANGE_API_TIMEOUT,
   endpoints,
+  NBP_WEB_API,
+  NBP_WEB_API_TIMEOUT,
 } from "@/constants/api";
 import { Error, ISignUpErrorResponse, IAuthResponse, User } from "@/lib/types/responses/user.type";
 import { getValueFor } from "@/utils/expo-secure-store";
-import { IAddFundsResponse, IFinancialsResponse, ITransactionsResponse } from "@/lib/types/responses/financial.type";
+import { IAddFundsResponse, IExchangeResponse, IFinancialsResponse, ITransactionsResponse } from "@/lib/types/responses/financial.type";
+import { ICurrencyRateResponse, IRatesTableResponse } from "@/lib/types/responses/nbp.type";
+import { RatesTable } from "@/lib/types/rates.type";
+import { ExchangeRequest } from "@/lib/types/requests/currency.type";
 
-const API = axios.create({
+const CurrencyAPI = axios.create({
   baseURL: CURRENCY_EXCHANGE_API,
   timeout: CURRENCY_EXCHANGE_API_TIMEOUT,
 });
 
-API.interceptors.request.use(
+const NBPWebAPI = axios.create({
+  baseURL: NBP_WEB_API,
+  timeout: NBP_WEB_API_TIMEOUT
+});
+
+CurrencyAPI.interceptors.request.use(
   async (config) => {
     const token = await getValueFor("user_me");
     if(token) {
@@ -25,28 +35,28 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 )
 
-API.interceptors.response.use(
+CurrencyAPI.interceptors.response.use(
   (response) => response,
   async (error) => {
     return Promise.reject(error);
   }
 )
 
-export const apiRequest = async <TResponse, TError>(
+export const apiRequest = async <TResponse, TError, TData = unknown>(
   url: string,
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
-  data?: Record<string, unknown>,
+  data?: TData,
   headers?: Record<string, string>
 ): Promise<{
   success: { res: AxiosResponse<TResponse> } | null;
   error: { data: TError; status: number } | null;
 }> => {
   try {
-    const res: AxiosResponse<TResponse> = await API({
+    const res: AxiosResponse<TResponse> = await CurrencyAPI({
       url,
       method,
       data,
-      headers
+      headers,
     });
     return { success: { res }, error: null };
   } catch (error: unknown) {
@@ -99,8 +109,8 @@ export const getFinancials = async () => {
   return { success, error };
 }
 
-export const getAllTransactions = async () => {
-  const url = endpoints.allTransactions;
+export const getAllTransactions = async (page: number = 1) => {
+  const url = `${endpoints.allTransactions}?page=${page}`;
   const { success, error } = await apiRequest<ITransactionsResponse, Error>(url, "GET");
 
   return { success, error };
@@ -115,4 +125,63 @@ export const addFunds = async ( amount: number ) => {
   );
 
   return { success, error };
+}
+
+export const exchangeCurrencies = async (data: ExchangeRequest) => {
+  const url = endpoints.exchange;
+  const { success, error } = await apiRequest<IExchangeResponse, Error, ExchangeRequest>(
+    url,
+    "POST",
+    data
+  )
+
+  return { success, error };
+}
+
+// NBP WEB API
+export const getAllCurrenciesByTable = async (table = "a"): Promise<RatesTable> => {
+  try {
+    const { data }: { data: IRatesTableResponse } = await NBPWebAPI.get(`/tables/${table}/?format=json`);
+    return data[0];
+  } catch (error) {
+    throw new Error(`Failed to fetch currency rates`);
+  }
+};
+
+export const getAllCurrencies = async () => {
+  try {
+    const [tableA, tableB] = await Promise.allSettled([getAllCurrenciesByTable("a"), getAllCurrenciesByTable("b")]);
+    if(tableA.status === "rejected" && tableB.status === "rejected") {
+      throw new Error("NBP API tables are unavailable. Please try again later.");
+    }
+    return [tableA, tableB]
+  } catch (error) {
+    throw new Error(`Failed to fetch currency rates`);
+  }
+}
+
+export const getCurrencyRate = async (table: string, code: string) => {
+  try {
+    const { data }: { data: ICurrencyRateResponse } = await NBPWebAPI.get(`/rates/${table}/${code}?format=json`);
+    return data;
+  } catch (error) {
+    throw new Error(`Failed to fetch currency rate`);
+  }
+}
+
+export const findCurrencyRate = async (code: string) => {
+  try {
+    const [tableA, tableB] = await Promise.allSettled([getCurrencyRate("a", code), getCurrencyRate("b", code)]);
+    if(tableA.status === "rejected" && tableB.status === "rejected") {
+      throw new Error("NBP API tables are unavailable. Please try again later.");
+    }
+    if(tableA.status === "fulfilled") {
+      return tableA.value;
+    }
+    if(tableB.status === "fulfilled") {
+      return tableB.value;
+    }
+  } catch (error) {
+    throw error;
+  }
 }

@@ -1,17 +1,13 @@
-import { Currency, Transaction } from "../currencies.type";
+import { ExchangeData, Transaction, UserFinancial } from "../currencies.type";
 
 export interface IFinancialsResponse {
-  data: {
-    __v: number;
-    _id: string;
-    userId: string;
-    balance: number;
-    currencies: Currency[];
-    baseCurrency: string;
-  };
+  data: UserFinancial;
 }
 
 export interface ITransactionsResponse {
+  currentPage: string;
+  totalPages: string;
+  totalTransactions: string;
   data: Transaction[];
 }
 
@@ -22,3 +18,8 @@ export interface IAddFundsResponse {
     baseCurrency: string;
   }
 }
+
+export interface IExchangeResponse {
+  data: ExchangeData;
+}
+

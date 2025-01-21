@@ -31,7 +31,7 @@ export const LoginFormValidation = z.object({
   password: z.string().min(1, { message: "Password is required" }),
 });
 
-export const FundAmountValidation = z.object({
+export const TransactionAmountValidation = z.object({
   amount: z
     .string()
     .min(1, { message: "Please enter an amount" })

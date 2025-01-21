@@ -13,7 +13,6 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 export default function TabsLayout() {
   const colorScheme = useColorScheme();
   const { user, isLoading } = useAuth();
-  console.log("user", user);
 
   if (isLoading) {
     return null;
@@ -50,20 +49,20 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
-        options={{
-          title: "Explore",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="transactions"
         options={{
           title: "Transactions",
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="dollarsign.circle" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="history"
+        options={{
+          title: "Transaction History",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="clock.arrow.2.circlepath" color={color} />
           ),
         }}
       />

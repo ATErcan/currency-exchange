@@ -12,7 +12,7 @@ export type Currency = {
 };
 
 export type Fund = {
-  _v: number;
+  __v: number;
   _id: string;
   userId: string;
   type: "fund";
@@ -22,7 +22,7 @@ export type Fund = {
 };
 
 export type Exchange = {
-  _v: number;
+  __v: number;
   _id: string;
   userId: string;
   type: "exchange";
@@ -34,3 +34,23 @@ export type Exchange = {
 };
 
 export type Transaction = Fund | Exchange;
+
+export type UserFinancial = {
+  __v: number;
+  _id: string;
+  userId: string;
+  balance: number;
+  currencies: Currency[];
+  baseCurrency: string;
+};
+
+export interface ExchangeData {
+  financial: Omit<UserFinancial, "__v" | "_id" | "userId">;
+  transaction: Exchange;
+}
+
+export interface TransactionDetails {
+  transaction: Transaction;
+  balance: number;
+  baseCurrency: string;
+}
