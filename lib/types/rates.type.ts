@@ -10,3 +10,9 @@ export interface RatesTable {
   effectiveDate: string;
   rates: Rate[];
 }
+
+export type CurrencyRate = {
+  no: string;
+  effectiveDate: string;
+  mid: number;
+};

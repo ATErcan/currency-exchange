@@ -19,15 +19,16 @@ import { BASE_CURRENCY } from "@/constants/utilsConstants";
 import { TransactionAmountValidation } from "@/utils/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ExchangeRequest } from "@/lib/types/requests/currency.type";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 export default function ExchangeScreen() {
+  const { to, from }: { to: string, from: string } = useLocalSearchParams();
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
   const [currencies, setCurrencies] = useState<Rate[]>([BASE_CURRENCY]);
   const [userFinancial, setUserFinancial] = useState<UserFinancial>();
-  const [fromCurrency, setFromCurrency] = useState<Rate>(BASE_CURRENCY);
-  const [toCurrency, setToCurrency] = useState<Rate>(BASE_CURRENCY);
+  const [fromCurrency, setFromCurrency] = useState<Rate>(from ? JSON.parse(from) : BASE_CURRENCY);
+  const [toCurrency, setToCurrency] = useState<Rate>(to ? JSON.parse(to) : BASE_CURRENCY);
   const [toCurrencyValue, setToCurrencyValue] = useState<string>("0,00");
 
   async function fetchCurrencies() {

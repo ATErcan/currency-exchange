@@ -10,7 +10,7 @@ import {
 import { Error, ISignUpErrorResponse, IAuthResponse, User } from "@/lib/types/responses/user.type";
 import { getValueFor } from "@/utils/expo-secure-store";
 import { IAddFundsResponse, IExchangeResponse, IFinancialsResponse, ITransactionsResponse } from "@/lib/types/responses/financial.type";
-import { IRatesTableResponse } from "@/lib/types/responses/nbp.type";
+import { ICurrencyRateResponse, IRatesTableResponse } from "@/lib/types/responses/nbp.type";
 import { RatesTable } from "@/lib/types/rates.type";
 import { ExchangeRequest } from "@/lib/types/requests/currency.type";
 
@@ -157,5 +157,31 @@ export const getAllCurrencies = async () => {
     return [tableA, tableB]
   } catch (error) {
     throw new Error(`Failed to fetch currency rates`);
+  }
+}
+
+export const getCurrencyRate = async (table: string, code: string) => {
+  try {
+    const { data }: { data: ICurrencyRateResponse } = await NBPWebAPI.get(`/rates/${table}/${code}?format=json`);
+    return data;
+  } catch (error) {
+    throw new Error(`Failed to fetch currency rate`);
+  }
+}
+
+export const findCurrencyRate = async (code: string) => {
+  try {
+    const [tableA, tableB] = await Promise.allSettled([getCurrencyRate("a", code), getCurrencyRate("b", code)]);
+    if(tableA.status === "rejected" && tableB.status === "rejected") {
+      throw new Error("NBP API tables are unavailable. Please try again later.");
+    }
+    if(tableA.status === "fulfilled") {
+      return tableA.value;
+    }
+    if(tableB.status === "fulfilled") {
+      return tableB.value;
+    }
+  } catch (error) {
+    throw error;
   }
 }

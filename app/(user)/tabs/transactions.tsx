@@ -28,7 +28,6 @@ export default function TransactionsScreen() {
             </Link>
           </ThemedView>
           <ThemedView className="gap-2 mb-1 rounded-2xl self-start px-2" lightColor="#e5e7eb" darkColor="#262626">
-            {/* TODO: Change to exchange when created */}
             <Link href="/exchange">
               <View className="flex-row items-center py-3 px-5">
                 <ThemedIconSymbol size={20} name="arrow.left.and.right" lightColor="#262626" darkColor="#e5e7eb" />
