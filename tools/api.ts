@@ -138,6 +138,13 @@ export const exchangeCurrencies = async (data: ExchangeRequest) => {
   return { success, error };
 }
 
+export const updateProfile = async (name: string) => {
+  const url = endpoints.userInfo;
+  const { success, error } = await apiRequest<User, Error>(url, "PATCH", { name });
+
+  return { success, error };
+}
+
 // NBP WEB API
 export const getAllCurrenciesByTable = async (table = "a"): Promise<RatesTable> => {
   try {

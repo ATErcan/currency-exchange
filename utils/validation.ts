@@ -44,3 +44,12 @@ export const TransactionAmountValidation = z.object({
       message: "Amount cannot be less than 1",
     }),
 });
+
+export const UpdateProfileFormValidation = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, { message: "Name is required" })
+    .min(2, { message: "Name must be at least 2 characters" })
+    .max(30, { message: "Name must be at most 30 characters" }),
+});
