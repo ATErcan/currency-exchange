@@ -1,11 +1,11 @@
+import { useMemo } from "react";
+import { Image } from "react-native";
 import CountryFlag from "react-native-country-flag";
 
 import { ThemedView } from "../ThemedView";
 import { ICircleFlagProps } from "@/lib/types/props.types";
 import { getCountriesByCurrency } from "@/utils/getCountry";
-import Toast from "react-native-toast-message";
-import { useMemo } from "react";
-import { Image } from "react-native";
+import { ThemedIconSymbol } from "../ThemedIconSymbol";
 
 export default function CircleFlag({
   code,
@@ -21,11 +21,7 @@ export default function CircleFlag({
   }, [code]);
 
   if(!country) {
-    Toast.show({
-      type: "error",
-      text1: `${code} wasn't found incurrency.`
-    })
-    return null;
+    return <ThemedIconSymbol size={32} name="globe" lightColor="#000" darkColor="#e5e7eb" />;
   };
   return (
     <ThemedView

@@ -11,7 +11,7 @@ import { Error, ISignUpErrorResponse, IAuthResponse, User } from "@/lib/types/re
 import { getValueFor } from "@/utils/expo-secure-store";
 import { IAddFundsResponse, IExchangeResponse, IFinancialsResponse, ITransactionsResponse } from "@/lib/types/responses/financial.type";
 import { ICurrencyRateResponse, IRatesTableResponse } from "@/lib/types/responses/nbp.type";
-import { RatesTable } from "@/lib/types/rates.type";
+import { GraphFormData, RatesTable } from "@/lib/types/rates.type";
 import { ExchangeRequest } from "@/lib/types/requests/currency.type";
 
 const CurrencyAPI = axios.create({
@@ -146,7 +146,7 @@ export const updateProfile = async (name: string) => {
 }
 
 // NBP WEB API
-export const getAllCurrenciesByTable = async (table = "a"): Promise<RatesTable> => {
+export const getAllCurrenciesByTable = async (table: string = "a"): Promise<RatesTable> => {
   try {
     const { data }: { data: IRatesTableResponse } = await NBPWebAPI.get(`/tables/${table}/?format=json`);
     return data[0];
@@ -192,3 +192,19 @@ export const findCurrencyRate = async (code: string) => {
     throw error;
   }
 }
+
+export const getArchivedRatesOfCurrency = async ({
+  table,
+  code,
+  startDate,
+  endDate,
+}: GraphFormData) => {
+  try {
+    const { data }: { data: ICurrencyRateResponse } = await NBPWebAPI.get(
+      `/rates/${table}/${code}/${startDate}/${endDate}?format=json`
+    );
+    return data;
+  } catch (error) {
+    throw new Error(`Failed to fetch currency rates`);
+  }
+};

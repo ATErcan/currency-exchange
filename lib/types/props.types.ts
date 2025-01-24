@@ -1,5 +1,5 @@
 import { Transaction } from "./currencies.type";
-import { Rate } from "./rates.type";
+import { Rate, Tables } from "./rates.type";
 
 export interface ICurrencyCardProps {
   code: string;
@@ -38,4 +38,9 @@ export interface IAvatarProps {
   width?: string;
   height?: string;
   textType?: "default" | "title" | "defaultSemiBold" | "subtitle";
+}
+
+export interface ICurrencyItemProps {
+  code: string;
+  table: Tables;
 }

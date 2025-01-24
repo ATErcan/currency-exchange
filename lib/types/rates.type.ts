@@ -4,6 +4,8 @@ export type Rate = {
   mid: number;
 }
 
+export type Tables = "a" | "b";
+
 export interface RatesTable {
   table: string;
   no: string;
@@ -16,3 +18,10 @@ export type CurrencyRate = {
   effectiveDate: string;
   mid: number;
 };
+
+export type GraphFormData = {
+  startDate: string;
+  endDate: string;
+  code: string;
+  table: Tables;
+}

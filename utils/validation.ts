@@ -53,3 +53,32 @@ export const UpdateProfileFormValidation = z.object({
     .min(2, { message: "Name must be at least 2 characters" })
     .max(30, { message: "Name must be at most 30 characters" }),
 });
+
+export const GraphRangeValidation = z
+  .object({
+    startDate: z.date({ invalid_type_error: "Start date is required" }),
+    endDate: z.date({ invalid_type_error: "End date is required" }),
+  })
+  .refine(({ startDate, endDate }) => startDate < endDate, {
+    message: "End date must be after start date",
+    path: ["endDate"],
+  })
+  .refine(
+    ({ startDate, endDate }) => {
+      const diffInMonths =
+        (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+        (endDate.getMonth() - startDate.getMonth());
+      return (
+        diffInMonths < 1 ||
+        (diffInMonths === 1 && endDate.getDate() < startDate.getDate())
+      );
+    },
+    {
+      message: "Dates must be at most 1 month apart",
+      path: ["endDate"],
+    }
+  )
+  .refine(({ endDate }) => endDate <= new Date(), {
+    message: "End date cannot be in the future",
+    path: ["endDate"],
+  });
