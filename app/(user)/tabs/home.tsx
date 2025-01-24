@@ -20,8 +20,6 @@ export default function HomeScreen() {
     amount: 0
   });
   const [currencies, setCurrencies] = useState<Currency[]>([]);
-  // TODO: calculate or remove totalBalance
-  const [totalBalance, setTotalBalance] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
 
   const bottom = useBottomTabOverflow();
@@ -63,7 +61,6 @@ export default function HomeScreen() {
       code: "PLN",
       amount: 0,
     });
-    setTotalBalance(0);
     setCurrencies((prevCurrencies) =>
       prevCurrencies.map((currency) => {
         return {
@@ -76,12 +73,6 @@ export default function HomeScreen() {
 
   return (
     <ThemedScrollView className="p-4" contentContainerStyle={{ paddingBottom: bottom }}>
-      <ThemedView className="gap-2 mb-1">
-        <ThemedText>Total Balance</ThemedText>
-      </ThemedView>
-      <ThemedView className="flex-row items-center gap-2">
-        <ThemedText type="title">100 PLN</ThemedText>
-      </ThemedView>
       <View className="flex-row gap-2 my-3">
         <ThemedView className="gap-2 mb-1 rounded-2xl self-start px-1" lightColor="#e5e7eb" darkColor="#262626">
           <Link href={{
@@ -123,7 +114,6 @@ export default function HomeScreen() {
               loading={loading}
             />
           ))}
-          {/* TODO: Add a card to add new currency */}
         </View>
       </ScrollView>
       
