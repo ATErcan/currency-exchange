@@ -59,7 +59,6 @@ function Transactions({ baseCurrency, page, setMaxPage, isSummary }: ITransactio
         )}
       </View>
       <View className="gap-4">
-        {/* TODO: create a proper loading UI */}
         {loading ? (
           <ThemedText type="title" lightColor="#111827" darkColor="#e5e7eb">Loading...</ThemedText>
         ) : (

@@ -19,9 +19,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const [isLoading, setIsLoading] = useState(true);
 
   async function logout() {
-    await deleteValueFor("user_me");
+    await deleteValueFor("user_me")
     setUser(null);
-    // TODO: change to login after created
     router.navigate("/login");
   }
 

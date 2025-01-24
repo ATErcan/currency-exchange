@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { LogBox, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import Toast from "react-native-toast-message";
 import { Controller, useForm } from "react-hook-form";
@@ -20,6 +20,10 @@ import { BASE_CURRENCY_RATE } from "@/constants/utilsConstants";
 import { TransactionAmountValidation } from "@/utils/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ExchangeRequest } from "@/lib/types/requests/currency.type";
+
+LogBox.ignoreLogs([
+  'A props object containing a "key" prop is being spread into JSX',
+]);
 
 export default function ExchangeScreen() {
   const { to, from }: { to: string, from: string } = useLocalSearchParams();
@@ -234,7 +238,6 @@ export default function ExchangeScreen() {
                 />
               )}
             />
-            {/* // TODO: check out key props warning */}
             <CurrencyDropdown
               currencies={currencies}
               onSelect={handleSelectFromCurrency}
@@ -296,10 +299,9 @@ export default function ExchangeScreen() {
               keyboardType="numeric"
               editable={false}
               value={toCurrencyValue}
-              className="flex-1 h-full p-2 text-3xl text-gray-300"
+              className="flex-1 h-full p-2 text-3xl text-gray-300 opacity-45"
               placeholder="0,00"
             />
-            {/* // TODO: check out key props warning */}
             <CurrencyDropdown
               currencies={currencies}
               onSelect={handleSelectToCurrency}

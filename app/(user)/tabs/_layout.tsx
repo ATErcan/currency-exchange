@@ -60,7 +60,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="history"
         options={{
-          title: "Transaction History",
+          title: "History",
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="clock.arrow.2.circlepath" color={color} />
           ),
