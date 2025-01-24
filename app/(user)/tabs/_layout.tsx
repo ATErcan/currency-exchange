@@ -75,6 +75,15 @@ export default function TabsLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="archive"
+        options={{
+          title: "Archive",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="archivebox" color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

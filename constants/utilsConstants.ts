@@ -4,3 +4,6 @@ export const BASE_CURRENCY_RATE = {
   code: "PLN",
   mid: 1,
 };
+
+export const tableA = "a";
+export const tableB = "b";
