@@ -32,3 +32,10 @@ export interface ICurrencyDropdownProps {
   loading: boolean;
   code: string;
 }
+
+export interface IAvatarProps {
+  name: string | undefined;
+  width?: string;
+  height?: string;
+  textType?: "default" | "title" | "defaultSemiBold" | "subtitle";
+}
