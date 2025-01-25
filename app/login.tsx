@@ -10,15 +10,15 @@ import {
   ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Link, router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Toast from "react-native-toast-message";
 
 import { LoginFormValidation } from "@/utils/validation";
 import { login } from "@/tools/api";
-import Toast from "react-native-toast-message";
 import { saveToSecureStore } from "@/utils/expo-secure-store";
-import { router } from "expo-router";
 
 export default function Login() {
   const {
@@ -124,15 +124,15 @@ export default function Login() {
                   </Text>
                 )}
               </View>
-
+              <Text className="mb-2">
+                Don't have an account? <Link href="/signup" className="underline">Sign Up</Link>
+              </Text>
               {/* Submit Button */}
               <TouchableOpacity
                 className="bg-blue-500 px-12 py-4 rounded-2xl"
                 onPress={handleSubmit(onSubmit)}
               >
-                <Text className="text-center text-white font-bold">
-                  Login
-                </Text>
+                <Text className="text-center text-white font-bold">Login</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>

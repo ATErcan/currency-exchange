@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import Toast from "react-native-toast-message";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { ThemedScrollView } from "@/components/ThemedScrollView";
 import { ThemedText } from "@/components/ThemedText";
@@ -18,8 +19,8 @@ import { convertToNumber, formatAmount, formatNumber, roundToPrecision } from "@
 import { calculateExchangeResult, calculateRate } from "@/utils/currencyFunctions";
 import { BASE_CURRENCY_RATE } from "@/constants/utilsConstants";
 import { TransactionAmountValidation } from "@/utils/validation";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { ExchangeRequest } from "@/lib/types/requests/currency.type";
+import ThemedInput from "@/components/ThemedInput";
 
 LogBox.ignoreLogs([
   'A props object containing a "key" prop is being spread into JSX',
@@ -229,12 +230,13 @@ export default function ExchangeScreen() {
               control={control}
               name="amount"
               render={({ field: { value } }) => (
-                <TextInput
+                <ThemedInput
                   keyboardType="numeric"
                   value={value}
                   onChangeText={(text) => handleFromChange(text)}
-                  className="flex-1 h-full p-2 text-3xl text-gray-300"
+                  className="flex-1 h-full p-2 text-3xl"
                   placeholder="0,00"
+                  darkColor="#d1d5db"
                 />
               )}
             />
@@ -295,12 +297,13 @@ export default function ExchangeScreen() {
             lightColor="#e5e7eb"
             darkColor="#262626"
           >
-            <TextInput
+            <ThemedInput
               keyboardType="numeric"
               editable={false}
               value={toCurrencyValue}
-              className="flex-1 h-full p-2 text-3xl text-gray-300 opacity-45"
+              className="flex-1 h-full p-2 text-3xl opacity-45"
               placeholder="0,00"
+              darkColor="#d1d5db"
             />
             <CurrencyDropdown
               currencies={currencies}

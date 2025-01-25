@@ -43,6 +43,8 @@ function Transactions({ baseCurrency, page, setMaxPage, isSummary }: ITransactio
       const { currentPage, totalPages, data } = success.res.data;
       if(currentPage === totalPages && setMaxPage) {
         setMaxPage(true)
+      } else if(data.length === 0 && setMaxPage) {
+        setMaxPage(true);
       }
       setTransactions((prevTransactions) => [...prevTransactions, ...data]);
     }
@@ -52,7 +54,7 @@ function Transactions({ baseCurrency, page, setMaxPage, isSummary }: ITransactio
     <View className="gap-4 mb-2">
       <View className="flex-row justify-between">
         <ThemedText type="title" className="mb-2">Transactions</ThemedText>
-        {isSummary && (
+        {isSummary &&  transactions.length !== 0 &&(
           <ThemedText lightColor="#111827" className="underline">
             <Link href="/(user)/tabs/history">See All</Link>
           </ThemedText>
@@ -62,10 +64,15 @@ function Transactions({ baseCurrency, page, setMaxPage, isSummary }: ITransactio
         {loading ? (
           <ThemedText type="title" lightColor="#111827" darkColor="#e5e7eb">Loading...</ThemedText>
         ) : (
-          transactions.map((transaction) => (
-            <TransactionItem key={transaction._id} transaction={transaction} baseCurrency={baseCurrency} />
-          ))
-        )}
+          transactions.length === 0 ? (
+            <ThemedText lightColor="#111827" darkColor="#e5e7eb" className="text-center mt-10">
+              You haven't made any transactions yet
+            </ThemedText>
+          ) : (
+            transactions.map((transaction) => (
+              <TransactionItem key={transaction._id} transaction={transaction} baseCurrency={baseCurrency} />
+            ))
+        ))}
       </View>
     </View>
   );
