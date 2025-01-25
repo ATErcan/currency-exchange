@@ -1,14 +1,14 @@
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Link, router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
+import Toast from "react-native-toast-message";
 
 import { SignUpFormValidation } from "@/utils/validation";
 import { signUp } from "@/tools/api";
-import Toast from "react-native-toast-message";
 import { saveToSecureStore } from "@/utils/expo-secure-store";
-import { router } from "expo-router";
 
 export default function SignUp() {
   const {
@@ -171,7 +171,7 @@ export default function SignUp() {
                   </Text>
                 )}
               </View>
-
+              <Text className="mb-2">Do you already have an account? <Link href="/login" className="underline">Login</Link></Text>
               {/* Submit Button */}
               <TouchableOpacity
                 className="bg-blue-500 px-12 py-4 rounded-2xl"

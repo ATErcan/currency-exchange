@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { Text, TouchableOpacity, View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { ThemedScrollView } from "@/components/ThemedScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import CircleFlag from "@/components/currency/CircleFlag";
-import { Controller, useForm } from "react-hook-form";
 import { TransactionAmountValidation } from "@/utils/validation";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { formatNumber } from "@/utils/formatDecimalSeperator";
+import ThemedInput from "@/components/ThemedInput";
 
 export default function FundAmountScreen() {
   const { baseCurrency }: { baseCurrency: string; } = useLocalSearchParams();
@@ -52,17 +52,17 @@ export default function FundAmountScreen() {
           lightColor="#e5e7eb"
           darkColor="#262626"
         >
-          {/* TODO: Create a ThemedInput component */}
           <Controller
             control={control}
             name="amount"
             render={({ field: { value } }) => (
-              <TextInput
+              <ThemedInput
                 keyboardType="numeric"
                 value={value}
                 onChangeText={(text) => handleChange(text)}
-                className="flex-1 h-full p-2 text-3xl text-gray-300"
+                className="flex-1 h-full p-2 text-3xl"
                 placeholder="0,00"
+                darkColor="#d1d5db"
               />
             )}
           />

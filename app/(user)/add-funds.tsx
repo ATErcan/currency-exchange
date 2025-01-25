@@ -16,12 +16,13 @@ import {
   LiteCreditCardInput,
   ValidationState,
 } from "react-native-credit-card-input";
+import { router, useLocalSearchParams } from "expo-router";
+import Toast from "react-native-toast-message";
 
 import { ThemedScrollView } from "@/components/ThemedScrollView";
 import { ThemedText } from "@/components/ThemedText";
-import { router, useLocalSearchParams } from "expo-router";
 import { addFunds } from "@/tools/api";
-import Toast from "react-native-toast-message";
+import { useTheme } from "@react-navigation/native";
 
 const toStatusIcon = (status?: ValidationState) =>
   status === "valid" ? "✅" : status === "invalid" ? "❌" : "❓";
@@ -33,6 +34,8 @@ export default function AddFundsScreen() {
   const [formData, setFormData] = useState<CreditCardFormData>();
 
   const { amount }: { amount: string } = useLocalSearchParams();
+
+  const { dark } = useTheme();
 
   async function addToBalance(amount: number) {
     try {
@@ -105,6 +108,7 @@ export default function AddFundsScreen() {
               autoFocus
               onChange={setFormData}
               onFocusField={setFocusedField}
+              inputStyle={{ color: dark ? "#d1d5db" : "#262626" }}
             />
           )}
 
@@ -165,7 +169,10 @@ export default function AddFundsScreen() {
               {formData?.values.cvc}
             </Text>
           </View>
-          <TouchableOpacity className="bg-blue-500 px-12 py-4 rounded-2xl" onPress={handleSubmit}>
+          <TouchableOpacity
+            className="bg-blue-500 px-12 py-4 rounded-2xl"
+            onPress={handleSubmit}
+          >
             <Text className="text-center text-white font-bold">Add Funds</Text>
           </TouchableOpacity>
         </ThemedScrollView>
